@@ -1,0 +1,1 @@
+FACEBOOK_SECRET_KEY = 'c4346da36ebfba5d349b79bae126fedb'
