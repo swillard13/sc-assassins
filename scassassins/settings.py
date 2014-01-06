@@ -90,7 +90,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-FACEBOOK_APP_ID = '247134442121359'
+FACEBOOK_APP_ID = '1408319899413345'
 
 # Optionally set default permissions to request, e.g: ['email', 'user_about_me']
 FACEBOOK_SCOPE = ['user_groups']
