@@ -104,4 +104,4 @@ FACEBOOK_DEBUG_SIGNEDREQ = ''
 # Optionally throw exceptions instead of returning HTTP errors on signed request issues
 FACEBOOK_RAISE_SR_EXCEPTIONS = True
 
-import settings_local
+from settings_local import *
