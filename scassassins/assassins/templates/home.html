@@ -1,0 +1,17 @@
+<html>
+	<head>
+		{% load facebook %}
+		{% facebook_init %}
+			{% block facebook_code %}
+			{% endblock %}
+		{% endfacebook %}
+	</head>
+	<body>
+		{% if profile %}
+			{{ profile.first_name }} {{ profile.last_name }}
+		{% else %}
+		{% endif %}
+		<fb:login-button autologoutlink="true" show-faces="true" width="200" max-rows="1" scope="{% facebook_scope %}"></fb:login-button>
+	</body>
+	{% facebook_load %}
+</html>
