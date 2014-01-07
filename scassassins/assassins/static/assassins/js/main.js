@@ -25,7 +25,7 @@ function bindEvents(){
 			} else if (response.status === 'not_authorized') {
 				FB.login();
 			} else {
-				FB.login();
+				//FB.login();
 			}
 		});
 	};
