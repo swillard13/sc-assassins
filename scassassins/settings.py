@@ -52,7 +52,6 @@ MIDDLEWARE_CLASSES = (
 
 AUTHENTICATION_BACKENDS = (
     'django_facebook.auth.FacebookBackend',
-    'django_facebook.auth.FacebookProfileBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
