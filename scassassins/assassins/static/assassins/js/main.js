@@ -39,10 +39,10 @@ function bindEvents(){
 
 	function connectActions() {
 		FB.api('/me', function(response) {
-			$('.navbar-right li a').show("fast", function(){
-				
+			$('.navbar-right li a').fadeIn("slow", function(){
+
 			}).text('Welcome ' + response.first_name + '!');
-			$('.navbar-right li div').show("fast", function(){
+			$('.navbar-right li div').fadeIn("slow", function(){
 
 			}).click(function(){
 				FB.logout(function(response){
