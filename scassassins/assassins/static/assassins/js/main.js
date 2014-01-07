@@ -14,11 +14,14 @@ function bindEvents(){
 			if(response.status !== 'connected'){
 				$('#fblogin').modal('show');
 			}
+			else if(response.status === 'connected'){
+				connectActions();
+			}
 		});
 		FB.Event.subscribe('auth.authResponseChange', function(response) { 
 			if (response.status === 'connected') {
 				$('#fblogin').modal('hide');
-				insertButtons();
+				connectActions();
 			} else if (response.status === 'not_authorized') {
 				FB.login();
 			} else {
@@ -34,15 +37,18 @@ function bindEvents(){
 		ref.parentNode.insertBefore(js, ref);
 	}(document));
 
-	function insertButtons() {
+	function connectActions() {
 		FB.api('/me', function(response) {
-			var navbar = $('.navbar-right');
-			navbar.append($('<li>').append($('<a href=\'#\'>').text('Welcome ' + response.first_name + '!')));
-			navbar.append($('<li>').append($('<div>').attr('id','logout').text('Log Out').click(function(){
+			$('.navbar-right li a').show("fast", function(){
+				
+			}).text('Welcome ' + response.first_name + '!');
+			$('.navbar-right li div').show("fast", function(){
+
+			}).click(function(){
 				FB.logout(function(response){
 					location.reload();
 				});
-			})));
+			});
 		});
 	}
 
