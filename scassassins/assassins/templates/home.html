@@ -1,19 +1,80 @@
-<html>
-	<head>
-		{% load facebook %}
-		{% facebook_init %}
-			{% block facebook_code %}
-			{% endblock %}
-		{% endfacebook %}
-		{% load staticfiles %}
-	</head>
-	<body>
-		{% if profile %}
-			{{ profile.first_name }} {{ profile.last_name }}
-		{% else %}
-		{% endif %}
-		<img src="{% static "assassins/img/ajax-loader.gif" %}" alt="My image"/> 
-		<fb:login-button autologoutlink="true" show-faces="true" width="200" max-rows="1" scope="{% facebook_scope %}"></fb:login-button>
-	</body>
-	{% facebook_load %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html class="no-js"> <!--<![endif]-->
+<head>
+	<!-- {% load facebook %}
+	{% facebook_init %}
+	{% block facebook_code %}
+	{% endblock %}
+	{% endfacebook %}
+	{% load staticfiles %} -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title></title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="{% static "assassins/js/vendor/jquery-1.10.1.min.js" %}"><\/script>')</script>
+	<link rel="stylesheet" href="{% static "assassins/css/bootstrap.min.css" %}">
+	<link rel="stylesheet" href="{% static "assassins/css/chosen.min.css" %}">
+	<link rel="stylesheet" href="{% static "assassins/css/main.css" %}">
+	<script src="{% static "assassins/js/vendor/modernizr-2.6.2.min.js" %}"></script>
+	<script src="{% static "assassins/js/vendor/bootstrap.min.js" %}"></script>
+	<style>
+		body{
+			padding-top:50px;
+			padding-bottom:20px;
+			padding-left:20px;
+		}
+	</style>
+</head>
+
+
+<body>
+	<div id="fb-root"></div>
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="collapse navbar-collapse" role="navigation">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/">SC-Assassins</a>
+			</div>
+			<ul class="nav navbar-nav" id="navbar">
+				<li><a href="#games"data-toggle="tab">My Games</a></li>
+				<li><a href="#create" data-toggle="tab">Create a Game</a></li>
+				<li><a href="#leaders" data-toggle="tab">Leaderboards</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+			</ul>
+		</div>
+	</nav>
+	<div class="tab-content">
+		<div class="tab-pane" id="games">Games</div>
+		<div class="tab-pane" id="create">Create</div>
+		<div class="tab-pane" id="leaders">Leaderboards</div>
+	</div>
+	<!-- {% if profile %}
+	{{ profile.first_name }} {{ profile.last_name }}
+	{% else %}
+	{% endif %}
+	<fb:login-button autologoutlink="true" show-faces="true" width="200" max-rows="1" scope="{% facebook_scope %}"></fb:login-button> -->
+	<div data-backdrop='static' data-keyboard='false' class="modal fade" id="fblogin" tabindex="-1" role="dialog" aria-labelledby="fblogin" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="logintitle">Login through Facebook</h4>
+				</div>
+				<div class="modal-body">
+					<fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>
+				</div>
+				<div class="modal-footer">
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</body>
+
+<!-- {% facebook_load %} -->
+<script src="{% static "assassins/js/main.js" %}"></script>
 </html>
