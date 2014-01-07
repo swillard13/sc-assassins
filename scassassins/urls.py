@@ -8,6 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', home, name='home'),
+    #url(r'^create_game/', create_game, name='create_game'),
     url(r'^facebook_debug/', TemplateView.as_view(template_name='facebook_debug.html')),
     url(r'^admin/', include(admin.site.urls)),
 )

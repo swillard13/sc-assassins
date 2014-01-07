@@ -1,9 +1,6 @@
 $(document).ready(function(){
 	bindEvents();
 });
-$(window).load(function(){
-	$('#fblogin').modal('show');
-});
 
 function bindEvents(){
 	window.fbAsyncInit = function() {
@@ -13,6 +10,11 @@ function bindEvents(){
     		cookie     : true, // enable cookies to allow the server to access the session
     		xfbml      : true  // parse XFBML
 });
+		FB.getLoginStatus(function(response){
+			if(response.status !== 'connected'){
+				$('#fblogin').modal('show');
+			}
+		});
 		FB.Event.subscribe('auth.authResponseChange', function(response) { 
 			if (response.status === 'connected') {
 				$('#fblogin').modal('hide');
@@ -43,6 +45,7 @@ function bindEvents(){
 			})));
 		});
 	}
+
 	$('#navbar a').click(function (e) {
 		e.preventDefault();
 		$(this).tab('show');
