@@ -9,8 +9,8 @@
 	{% facebook_init %}
 	{% block facebook_code %}
 	{% endblock %}
-	{% endfacebook %}
-	{% load staticfiles %} -->
+	{% endfacebook %}-->
+	{% load staticfiles %}
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<title></title>
@@ -23,6 +23,8 @@
 	<link rel="stylesheet" href="{% static "assassins/css/main.css" %}">
 	<script src="{% static "assassins/js/vendor/modernizr-2.6.2.min.js" %}"></script>
 	<script src="{% static "assassins/js/vendor/bootstrap.min.js" %}"></script>
+	<link type="text/css" href="{% static "assassins/friend-selector/friend-selector/jquery.friend.selector-1.2.1.css" %}" rel="stylesheet" />
+	<script type="text/javascript" src="{% static "assassins/friend-selector/friend-selector/jquery.friend.selector-1.2.1.js" %}"></script>
 	<style>
 		body{
 			padding-top:50px;
@@ -47,15 +49,17 @@
 				<li><a href="#leaders" data-toggle="tab">Leaderboards</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li id="welcome"><a href='#' style="display: none;"></a></li>
-				<li><div id="logout" style="display: none;">Log Out</div></li>
+				<li id="welcome"><a href='#' style="display: none;cursor:default;"></a></li>
+				<li><div class="fbbutton" id="logout" style="display: none;">Log Out</div></li>
 			</ul>
 		</div>
 	</nav>
 	<div class="tab-content">
 		<div class ="tab-pane active" id="home">Home</div>
 		<div class="tab-pane" id="games">Games</div>
-		<div class="tab-pane" id="create">Create</div>
+		<div class="tab-pane" id="create">Create
+			<button href="javascript:{}" class="bt-fs-dialog fbbutton">Invite Friends</button>
+		</div>
 		<div class="tab-pane" id="leaders">Leaderboards</div>
 	</div>
 	<!-- {% if profile %}

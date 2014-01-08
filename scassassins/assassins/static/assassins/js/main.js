@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).ready(function($){
 	bindEvents();
 });
 
@@ -9,7 +9,7 @@ function bindEvents(){
     		status     : true, // check login status
     		cookie     : true, // enable cookies to allow the server to access the session
     		xfbml      : true  // parse XFBML
-});
+    	});
 		FB.getLoginStatus(function(response){
 			if(response.status !== 'connected'){
 				$('#fblogin').modal('show');
@@ -37,23 +37,46 @@ function bindEvents(){
 		ref.parentNode.insertBefore(js, ref);
 	}(document));
 
-	function connectActions() {
-		FB.api('/me', function(response) {
-			$('.navbar-right li a').fadeIn("slow", function(){
+	$(".bt-fs-dialog").fSelector({
+		closeOnSubmit: true,
+		onSubmit: function(response){
+			console.log(response);
+		}
+	});
 
-			}).text('Welcome ' + response.first_name + '!');
-			$('.navbar-right li div').fadeIn("slow", function(){
+	/*$('#create #friendpicker').click(function(){
+		FB.ui({method: 'apprequests',
+			message: 'Assassin Request'
+		}, function(response){
+			if(response && response.to){
+				console.log(response);
+				var request_ids = [];
+				for(i=0; i<response.to.length; i++) {
+					var temp = response.request + '_' + response.to[i];
+					request_ids.push(temp);
+				}
+				var requests = request_ids.join(',');
+				alert(requests);
+			}
+		});
+		return false;
+	});*/
+$('#navbar a').click(function (e) {
+	e.preventDefault();
+	$(this).tab('show');
+});
+}
+function connectActions() {
+	FB.api('/me', function(response) {
+		$('.navbar-right li a').fadeIn("slow", function(){
 
-			}).click(function(){
-				FB.logout(function(response){
-					location.reload();
-				});
+		}).text('Welcome ' + response.first_name + '!');
+		$('.navbar-right li div').fadeIn("slow", function(){
+
+		}).click(function(){
+			FB.logout(function(response){
+				location.reload();
 			});
 		});
-	}
-
-	$('#navbar a').click(function (e) {
-		e.preventDefault();
-		$(this).tab('show');
 	});
 }
