@@ -9,3 +9,4 @@ def home(request):
 def create_game(request):
 	if request.POST:
 		print('Hello')
+		return request

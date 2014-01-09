@@ -45,7 +45,20 @@ function bindEvents(){
 			if(response.length > 0){
 				console.log(response);
 				for(var i = 0;i<response.length;i++){
-					$('#inviteList').append($('<div>').append($('<img>').attr('src',"https://graph.facebook.com/" + response[i] + "/picture")));
+					var url = "https://graph.facebook.com/" + response[i] + "/";
+					var user_name = "";
+					$.ajax({
+						type: "POST",
+						url: url,
+						dataType: 'json',
+						success: function(data){
+							alert(data);
+						},
+						error: function(){
+							alert('failure')
+						}
+					});
+					$('#inviteList').append($('<div>').append($('<img>').attr('src', url + "picture")));
 				}
 			}
 		}
