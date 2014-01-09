@@ -49,7 +49,7 @@
 				<li><a href="#leaders" data-toggle="tab">Leaderboards</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li id="welcome"><a href='#' style="display: none;cursor:default;"></a></li>
+				<li id="welcome"><a style="display: none;cursor:default;"></a></li>
 				<li><div class="fbbutton" id="logout" style="display: none;">Log Out</div></li>
 			</ul>
 		</div>
@@ -57,16 +57,17 @@
 	<div class="tab-content">
 		<div class ="tab-pane active" id="home">Home</div>
 		<div class="tab-pane" id="games">Games</div>
-		<div class="tab-pane" id="create">Create
-			<button href="javascript:{}" class="bt-fs-dialog fbbutton">Invite Friends</button>
+		<div class="tab-pane" id="create">
+			<h3>Create your Game</h3>
+			<form id="createForm">
+				<div><input type="text" name="gameName" placeholder="Give your game a name"></div>
+				<div id="inviteList"></div>
+				<input type="submit" id="gameCreate" value="Create">
+			</form>
+				<button href="javascript:{}" class="bt-fs-dialog fbbutton">Invite Friends</button>
 		</div>
 		<div class="tab-pane" id="leaders">Leaderboards</div>
 	</div>
-	<!-- {% if profile %}
-	{{ profile.first_name }} {{ profile.last_name }}
-	{% else %}
-	{% endif %}
-	<fb:login-button autologoutlink="true" show-faces="true" width="200" max-rows="1" scope="{% facebook_scope %}"></fb:login-button> -->
 	<div data-backdrop='static' data-keyboard='false' class="modal fade" id="fblogin" tabindex="-1" role="dialog" aria-labelledby="fblogin" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -82,7 +83,5 @@
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 </body>
-
-<!-- {% facebook_load %} -->
 <script src="{% static "assassins/js/main.js" %}"></script>
 </html>

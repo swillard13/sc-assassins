@@ -14,7 +14,7 @@ function bindEvents(){
 			if(response.status !== 'connected'){
 				$('#fblogin').modal('show');
 			}
-			else if(response.status === 'connected'){
+			else{
 				connectActions();
 			}
 		});
@@ -39,8 +39,15 @@ function bindEvents(){
 
 	$(".bt-fs-dialog").fSelector({
 		closeOnSubmit: true,
+		facebookInvite: false,
+		showButtonSelectAll: false,
 		onSubmit: function(response){
-			console.log(response);
+			if(response.length > 0){
+				console.log(response);
+				for(var i = 0;i<response.length;i++){
+					$('#inviteList').append($('<div>').append($('<img>').attr('src',"https://graph.facebook.com/" + response[i] + "/picture")));
+				}
+			}
 		}
 	});
 
@@ -61,10 +68,26 @@ function bindEvents(){
 		});
 		return false;
 	});*/
-$('#navbar a').click(function (e) {
-	e.preventDefault();
-	$(this).tab('show');
-});
+	$("#createForm").submit(function(e){
+		alert($(this).serialize());
+		var url= "create_game";
+		$.ajax({
+			type: "POST",
+			url: url,
+			data: $(this).serialize(),
+			success: function(data){
+				alert(data);
+			},
+			error: function(){
+				alert('failure');
+			}
+		});
+		return false;
+	});
+	$('#navbar a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+	});
 }
 function connectActions() {
 	FB.api('/me', function(response) {
