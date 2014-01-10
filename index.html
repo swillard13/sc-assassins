@@ -10,24 +10,70 @@
 	<title></title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
 	<link rel="stylesheet" href="css/bootstrap.min.css">
-  	<style>
-    body {
-   	  background:blue;
-      padding-top: 50px;
-      padding-bottom: 20px;
-    }
-  	</style>
-  	<!--<link rel="stylesheet" href="css/bootstrap-theme.min.css">-->
-  	<link rel="stylesheet" href="css/chosen.min.css">
- 	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/chosen.min.css">
+	<link rel="stylesheet" href="css/main.css">
 	<script src="js/vendor/modernizr-2.6.2.min.js"></script>
+	<script src="js/vendor/bootstrap.min.js"></script>
+	<link type="text/css" href="plugins/friend-selector/friend-selector/jquery.friend.selector-1.2.1.css" rel="stylesheet" />
+	<script type="text/javascript" src="plugins/friend-selector/friend-selector/jquery.friend.selector-1.2.1.js" ></script>
+	<style>
+		body{
+			padding-top:50px;
+			padding-bottom:20px;
+			padding-left:20px;
+		}
+	</style>
 </head>
 <body>
-
+	<div id="fb-root"></div>
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="collapse navbar-collapse" role="navigation">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/">SC-Assassins</a>
+			</div>
+			<ul class="nav navbar-nav" id="navbar">
+				<li class="active"><a href="#home" data-toggle="tab">Home</a></li>
+				<li><a href="#games"data-toggle="tab">My Games</a></li>
+				<li><a href="#create" data-toggle="tab">Create a Game</a></li>
+				<li><a href="#leaders" data-toggle="tab">Leaderboards</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li id="welcome"><a style="display: none;cursor:default;"></a></li>
+				<li><div class="fbbutton" id="logout" style="display: none;">Log Out</div></li>
+			</ul>
+		</div>
+	</nav>
+	<div class="tab-content">
+		<div class ="tab-pane active" id="home">Home</div>
+		<div class="tab-pane" id="games">Games</div>
+		<div class="tab-pane" id="create">
+			<h3>Create your Game</h3>
+			<form id="createForm">
+				<div><input type="text" name="gameName" placeholder="Give your game a name"></div>
+				<div id="inviteList"></div>
+				<a href="javascript:{}" class="bt-fs-dialog fbbutton">Invite Friends</a>
+				<input type="submit" id="gameCreate" value="Create">
+			</form>
+		</div>
+		<div class="tab-pane" id="leaders">Leaderboards</div>
+	</div>
+	<div data-backdrop='static' data-keyboard='false' class="modal fade" id="fblogin" tabindex="-1" role="dialog" aria-labelledby="fblogin" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="logintitle">Log In through Facebook</h4>
+				</div>
+				<div class="modal-body">
+					<fb:login-button show-faces="false" width="200" max-rows="1"></fb:login-button>
+				</div>
+				<div class="modal-footer">
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 </body>
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
 <script src="js/main.js"></script>
 </html>
