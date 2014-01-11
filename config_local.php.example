@@ -1,0 +1,10 @@
+<?php
+// Facebook settings
+define('FACEBOOK_APP_SECRET', '');
+
+// Database settings
+define('DATABASE_HOST', '');
+define('DATABASE_USER', '');
+define('DATABASE_PASSWORD', '');
+define('DATABASE_NAME', '');
+?>
