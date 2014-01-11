@@ -3,6 +3,19 @@ $(document).ready(function($){
 });
 
 function bindEvents(){
+	(function(d){
+		var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement('script'); js.id = id; js.async = true;
+		js.src = "//connect.facebook.net/en_US/all.js";
+		ref.parentNode.insertBefore(js, ref);
+	}(document));
+	
+	$('#navbar a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+	});
+
 	window.fbAsyncInit = function() {
 		FB.init({
 			appId      : '1408319899413345',
@@ -23,19 +36,36 @@ function bindEvents(){
 				$('#fblogin').modal('hide');
 				connectActions();
 			} else if (response.status === 'not_authorized') {
-				FB.login();
-			} else {
 				//FB.login();
+			} else {
+
 			}
 		});
 	};
-	(function(d){
-		var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-		if (d.getElementById(id)) {return;}
-		js = d.createElement('script'); js.id = id; js.async = true;
-		js.src = "//connect.facebook.net/en_US/all.js";
-		ref.parentNode.insertBefore(js, ref);
-	}(document));
+
+	$("#createForm").submit(function(e){
+		var url = $(this).attr('action');
+		var type = $(this).attr('method');
+		$.ajax({
+			type: type,
+			url: url,
+			data: $(this).serialize(),
+			success: function(data){
+				
+			},
+			error: function(){
+				alert('failure');
+			}
+		});
+		e.preventDefault();
+	});
+
+	$('[required]').siblings('label').append($('<span style="color: #FF0000;">*</span>'));
+
+	(function(){
+		var dateString = getDateString();
+		$("#startDate").attr('min',dateString).attr('value',dateString);
+	})();
 
 	$(".bt-fs-dialog").fSelector({
 		closeOnSubmit: true,
@@ -44,62 +74,23 @@ function bindEvents(){
 		onSubmit: function(response){
 			if(response.length > 0){
 				for(var i = 0;i<response.length;i++){
-					var name = "";
-					var data;
-					var url = "https://graph.facebook.com/" + response[i] + "/";
+					var id = response[i];
+					var url = "https://graph.facebook.com/" + id + "/";
 					FB.api('/', 'POST', {
 						batch: [
-						{ method: 'GET', relative_url: response[i] },
+						{ method: 'GET', relative_url: id },
 						]
 					}, function (response) {
-						data = $.parseJSON(response[0]['body']);
-						name = data.name;
+						var data = $.parseJSON(response[0]['body']);
+						$('#inviteList').append($('<div>').attr('id',data.id).append($('<img>').attr('src', "https://graph.facebook.com/" + data.id + "/picture")).append($('<div>').text('name: ' + data.name)));
 					});
-					$('#inviteList').append($('<div>').attr('id',response[i]).append($('<img>').attr('src', url + "picture")).append($('<div>').text('' + name)));
 				}
 			}
 		}
 	});
-
-	/*$('#create #friendpicker').click(function(){
-		FB.ui({method: 'apprequests',
-			message: 'Assassin Request'
-		}, function(response){
-			if(response && response.to){
-				console.log(response);
-				var request_ids = [];
-				for(i=0; i<response.to.length; i++) {
-					var temp = response.request + '_' + response.to[i];
-					request_ids.push(temp);
-				}
-				var requests = request_ids.join(',');
-				alert(requests);
-			}
-		});
-		return false;
-	});*/
-$("#createForm").submit(function(e){
-	alert($(this).serialize());
-	var url= "";
-	$.ajax({
-		type: "POST",
-		url: url,
-		data: $(this).serialize(),
-		success: function(data){
-			alert(data);
-		},
-		error: function(){
-			alert('failure');
-		}
-	});
-	return false;
-});
-$('#navbar a').click(function (e) {
-	e.preventDefault();
-	$(this).tab('show');
-});
 }
-function connectActions() {
+
+function connectActions() {	
 	FB.api('/me', function(response) {
 		$('.navbar-right li a').fadeIn("slow", function(){
 
@@ -112,4 +103,15 @@ function connectActions() {
 			});
 		});
 	});
+}
+
+function getDateString(){
+	Date.prototype.yyyymmdd = function() {
+		var yyyy = this.getFullYear().toString();
+		var mm = (this.getMonth()+1).toString();
+		var dd  = this.getDate().toString();
+		return yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]);
+	};
+	d = new Date();
+	return d.yyyymmdd();
 }

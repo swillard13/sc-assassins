@@ -578,7 +578,7 @@
     color: "default",
     lang: {
       title: "Friend Selector",
-      buttonSubmit: "Send",
+      buttonSubmit: "Select",
       buttonCancel: "Cancel",
       buttonSelectAll: "Select All",
       buttonDeselectAll: "Deselect All",

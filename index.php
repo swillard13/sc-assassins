@@ -51,15 +51,22 @@
 		<div class="tab-pane" id="games">Games</div>
 		<div class="tab-pane" id="create">
 			<h3>Create your Game</h3>
-			<form method="post" action="./ajax/create_game.php">
-				<div>
-					<p><input type="text" name="title" placeholder="Give your game a name"/></p>
-					<p><input type="text" name="description" placeholder="Description"/></p>
-					<p><input type="text" name="startDate" placeholder="Start date"/></p>
+			<form id="createForm" role="form" method="post" action="ajax/create_game.php">
+				<div class="form-group">
+					<label for="name">Game Name</label>
+					<input id="name" class="form-control" type="text" name="name" placeholder="Give your game a name" style="width:25%;" required>
 				</div>
-				<div id="inviteList"></div>
-				<a href="javascript:{}" class="bt-fs-dialog fbbutton">Invite Friends</a>
-				<input type="submit" value="Create">
+				<div class="form-group">
+					<label for="gameDescription">Game Description</label>
+					<textarea id="description" class="form-control" rows="5" name="description" form="createForm" placeholder="Give rules or information about the game" style="width:25%;"></textarea>
+				</div>
+				<div class="form-group">
+					<label for="startDate">Start Date</label>
+					<input id="startDate" class="form-control" type="date" name="startDate" style="width:20%;" required>
+				</div>
+				<div><button type="submit" class="btn btn-default">Create</button></div>
+				<div class="form-group" id="inviteList"></div>
+				<div class="form-group"><a href="javascript:{}" class="bt-fs-dialog fbbutton">Invite Friends</a></div>
 			</form>
 		</div>
 		<div class="tab-pane" id="leaders">Leaderboards</div>
@@ -68,7 +75,7 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title" id="logintitle">Log In through Facebook</h4>
+					<h4 class="modal-title" id="logintitle">Connect through Facebook</h4>
 				</div>
 				<div class="modal-body">
 					<fb:login-button show-faces="false" width="200" max-rows="1"></fb:login-button>
