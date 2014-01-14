@@ -6,6 +6,8 @@ class Player extends Model {
 	public $user;
 	public $game;
 	public $pending;
+	public $target;
+	public $killer;
 
 }
 
