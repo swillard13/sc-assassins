@@ -11,11 +11,12 @@ $facebook = new Facebook(array(
     'allowSignedRequest' => FACEBOOK_ALLOW_SIGNED_REQUEST,
 ));
 if (!$facebook->getUser()) {
-	header("HTTP/1.1 401 Unauthorized");
+	http_response_code(401);
 	exit;
 }
 header('Content-type: application/json');
 if (array_key_exists('title', $_POST) && array_key_exists('description', $_POST) && array_key_exists('startDate', $_POST)) {
+	
 	$game = new Game();
 	if (array_key_exists('id', $_POST)) {
 		$game->id = $_POST['id'];
@@ -37,6 +38,7 @@ if (array_key_exists('title', $_POST) && array_key_exists('description', $_POST)
 		echo json_encode(array('success' => false, 'reason' => 'Invalid start date.'));
 	}
 }  else {
+	http_response_code(400);
 	echo json_encode(array('success' => false, 'reason' => 'Missing required parameters.'));
 }
 ?>
