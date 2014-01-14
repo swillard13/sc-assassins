@@ -19,3 +19,11 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
+#games-list .game-content {
+    display: none;
+}
+
+#games-list .active .game-content {
+    display: block;
+}

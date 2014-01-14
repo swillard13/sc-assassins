@@ -48,13 +48,16 @@
 	</nav>
 	<div class="tab-content">
 		<div class ="tab-pane active" id="home">Home</div>
-		<div class="tab-pane" id="games">Games</div>
+		<div class="tab-pane" id="games">
+			<h3>My Games</h3>
+			<ul id="games-list"></ul>
+		</div>
 		<div class="tab-pane" id="create">
 			<h3>Create your Game</h3>
 			<form id="createForm" role="form" method="post" action="ajax/create_game.php">
 				<div class="form-group">
 					<label for="name">Game Name</label>
-					<input id="name" class="form-control" type="text" name="name" placeholder="Give your game a name" style="width:25%;" required>
+					<input id="name" class="form-control" type="text" name="title" placeholder="Give your game a name" style="width:25%;" required>
 				</div>
 				<div class="form-group">
 					<label for="gameDescription">Game Description</label>

@@ -14,11 +14,18 @@ if (!$facebook->getUser()) {
 	exit;
 }
 $game = new Game();
-$game->id = $_GET['id'];
-if (!$game->load()) {
-	header("HTTP/1.1 404 Not Found");
-	exit;
+if (array_key_exists('gameId', $_GET)) {
+	$game->id = $_GET['gameId'];
+	if (!$game->load()) {
+		header("HTTP/1.1 404 Not Found");
+		exit;
+	}
+	header('Content-type: application/json');
+	echo $game->toJson();
+} else {
+	if ($games = getGamesForUser($facebook->getUser())) {
+		header('Content-type: application/json');
+		echo json_encode($games);
+	} 
 }
-header('Content-type: application/json');
-echo $game->toJson();
 ?>

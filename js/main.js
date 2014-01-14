@@ -1,5 +1,15 @@
 $(document).ready(function($){
 	bindEvents();
+	$('a[href$="#games"]').click(function() {
+		$('#games-list').empty();
+		$.get('./ajax/get_games.php', function(data) {
+			if (data) {
+				$.each(data, function(key, entry){
+					$('#games-list').append(createGameTile(entry));
+				});
+			}
+		});
+	});
 });
 
 function bindEvents(){
@@ -114,4 +124,22 @@ function getDateString(){
 	};
 	d = new Date();
 	return d.yyyymmdd();
+}
+
+function createGameTile(data) {
+	var game = $('<li>');
+	game.append($('<h4>').text(data.title));
+	var content = $('<div>').addClass('game-content');
+	content.append($('<p>').text(data.description));
+	content.append($('<p>').text(data.startDate));
+	game.append(content);
+	game.attr('data-game-id', data.id);
+	game.click(function() {
+		if ($(this).hasClass('active')) {
+			$(this).removeClass('active');
+		} else {
+			$(this).addClass('active');
+		}
+	});
+	return game;
 }

@@ -22,7 +22,6 @@ abstract class Model {
 		$types = array();
 		$params = array();
 		foreach ($members as $key => $value) {
-			$type = '';
 			switch (gettype($value)) {
 				case 'integer':
 					array_push($types, 'i');
@@ -39,8 +38,12 @@ abstract class Model {
 		if ($insert) {
 			$statement = $database->prepare(sprintf('INSERT INTO %s (%s) VALUES (%s)', $this->getTableName(), implode(',', array_keys($members)), implode(',', $params)));
 			call_user_func_array(array(&$statement, 'bind_param'), array_merge(array(implode('', $types)), getReferences(array_values($members))));
-			$statement->execute();
-			return $statement->get_result();
+			if ($statement->execute()) {
+				$this->id = $database->insert_id;
+				return true;	
+			} else {
+				return false;
+			}
 		} else {
 			$updateFields = array();
 			foreach ($members as $key => $value) {
@@ -49,24 +52,26 @@ abstract class Model {
 			$statement = $database->prepare(sprintf('UPDATE %s SET %s WHERE id = ?', $this->getTableName(), implode(',', $updateFields)));
 			array_push($types, 'i');
 			call_user_func_array(array(&$statement, 'bind_param'), array_merge(array(implode('', $types)), getReferences(array_merge(array_values($members), array($this->id)))));
-			$statement->execute();
-			return $statement->get_result();
+			return $statement->execute();
 		}
 	}
 
 	public function load() {
 		$result = $this->selectById();
 		if ($result) {
-			$row = $result->fetch_assoc();
-			foreach ($this as $key => $value) {
-				$this->$key = $row[$key];
-			}
+			$this->loadFromRow($result->fetch_assoc());
 			return true;
 		}
 		return false;
 	}
 
-	private function selectById() {
+	public function loadFromRow($row) {
+		foreach ($this as $key => $value) {
+			$this->$key = $row[$key];
+		}
+	}
+
+	private function selectById($columns='*') {
 		$database = getDatabase();
 		$statement = $database->prepare(sprintf('SELECT * FROM %s WHERE id = ?', $this->getTableName()));
 		$statement->bind_param('i', $this->id);
