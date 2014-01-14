@@ -2,7 +2,8 @@ $(document).ready(function($){
 	bindEvents();
 	$('a[href$="#games"]').click(function() {
 		$('#games-list').empty();
-		$.get('./ajax/get_games.php', function(data) {
+		$.get('ajax/get_games.php', function(data) {
+			alert(data);
 			if (data) {
 				$.each(data, function(key, entry){
 					$('#games-list').append(createGameTile(entry));
@@ -64,7 +65,7 @@ function bindEvents(){
 				
 			},
 			error: function(){
-				alert('failure');
+				
 			}
 		});
 		e.preventDefault();
@@ -78,6 +79,7 @@ function bindEvents(){
 	})();
 
 	(function(){
+		$.get('ajax/get_players.php',)
 		$(".bt-fs-dialog").fSelector({
 		closeOnSubmit: true,
 		facebookInvite: false,
@@ -86,7 +88,6 @@ function bindEvents(){
 			if(response.length > 0){
 				for(var i = 0;i<response.length;i++){
 					var id = response[i];
-					var url = "https://graph.facebook.com/" + id + "/";
 					FB.api('/', 'POST', {
 						batch: [
 						{ method: 'GET', relative_url: id },
@@ -145,4 +146,8 @@ function createGameTile(data) {
 		}
 	});
 	return game;
+}
+
+function addPlayerToList(data){
+	
 }

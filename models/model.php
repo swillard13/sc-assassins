@@ -12,6 +12,7 @@ abstract class Model {
 
 	public function save() {
 		$database = getDatabase();
+		if(!$database) http_response_code(400);
 		$insert = (isset($this->id)) ? false : $this->selectById();
 		return $this->saveToDatabase($insert, $database);
 	}
