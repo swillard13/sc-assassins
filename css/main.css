@@ -19,7 +19,7 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
-.inviteList {
+#inviteList {
     border: 1px solid #ccc;
     display:inline-block;
     -webkit-border-radius: 3px;

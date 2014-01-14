@@ -92,7 +92,9 @@ function bindEvents(){
 						]
 					}, function (response) {
 						var data = $.parseJSON(response[0]['body']);
-						$('#inviteList').append($('<div>').attr('id',data.id).append($('<img>').attr('src', "https://graph.facebook.com/" + data.id + "/picture")).append($('<div>').text('name: ' + data.name)));
+						$('#inviteList').append($('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
+							$(this).parent().remove();
+						})));
 					});
 				}
 			}
