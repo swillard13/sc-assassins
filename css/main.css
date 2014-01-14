@@ -57,3 +57,11 @@ input::-webkit-inner-spin-button {
     float:right;
     cursor:pointer;
 }
+
+#games-list .game-content {
+    display: none;
+}
+
+#games-list .active .game-content {
+    display: block;
+}
