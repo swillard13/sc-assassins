@@ -14,7 +14,7 @@ if (!$facebook->getUser()) {
 	http_response_code(401);
 	exit;
 }
-//header('Content-type: application/json');
+header('Content-type: application/json');
 if (array_key_exists('title', $_POST) && array_key_exists('description', $_POST) && array_key_exists('startDate', $_POST)) {
 	
 	$game = new Game();
@@ -32,7 +32,7 @@ if (array_key_exists('title', $_POST) && array_key_exists('description', $_POST)
 			$player = new Player();
 			$player->user = $game->admin;
 			$player->game = $game->id;
-			$player->pending = false;
+			$player->pending = 0;
 			if ($player->save()) {
 				echo json_encode(array('success' => true, 'game' => get_object_vars($game)));
 			} else {

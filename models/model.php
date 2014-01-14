@@ -43,6 +43,7 @@ abstract class Model {
 				$this->id = $database->insert_id;
 				return true;	
 			} else {
+				echo($database->error);
 				return false;
 			}
 		} else {

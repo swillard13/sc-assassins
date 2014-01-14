@@ -79,7 +79,7 @@ function bindEvents(){
 	})();
 
 	(function(){
-		$.get('ajax/get_players.php',)
+		/*$.get('ajax/get_players.php',)*/
 		$(".bt-fs-dialog").fSelector({
 		closeOnSubmit: true,
 		facebookInvite: false,
