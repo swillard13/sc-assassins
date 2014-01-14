@@ -77,7 +77,8 @@ function bindEvents(){
 		$("#startDate").attr('min',dateString).attr('value',dateString);
 	})();
 
-	$(".bt-fs-dialog").fSelector({
+	(function(){
+		$(".bt-fs-dialog").fSelector({
 		closeOnSubmit: true,
 		facebookInvite: false,
 		showButtonSelectAll: false,
@@ -92,14 +93,14 @@ function bindEvents(){
 						]
 					}, function (response) {
 						var data = $.parseJSON(response[0]['body']);
-						$('#inviteList').append($('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
+						$('.inviteList').append($('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
 							$(this).parent().remove();
 						})));
 					});
 				}
 			}
 		}
-	});
+	})})();
 }
 
 function connectActions() {	

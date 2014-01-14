@@ -68,7 +68,7 @@
 					<input id="startDate" class="form-control" type="date" name="startDate" style="width:20%;" required>
 				</div>
 				<div><button type="submit" class="btn btn-default">Create</button></div>
-				<div class="form-group" id="inviteList"></div>
+				<div class="form-group inviteList"></div>
 				<div class="form-group"><a href="javascript:{}" class="bt-fs-dialog fbbutton">Invite Friends</a></div>
 			</form>
 		</div>
