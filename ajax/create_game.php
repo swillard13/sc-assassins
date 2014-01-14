@@ -14,7 +14,7 @@ if (!$facebook->getUser()) {
 	http_response_code(401);
 	exit;
 }
-header('Content-type: application/json');
+//header('Content-type: application/json');
 if (array_key_exists('title', $_POST) && array_key_exists('description', $_POST) && array_key_exists('startDate', $_POST)) {
 	
 	$game = new Game();
@@ -28,12 +28,19 @@ if (array_key_exists('title', $_POST) && array_key_exists('description', $_POST)
 		$game->startDate = $_POST['startDate'];	
 		$game->admin = $facebook->getUser();
 		$game->save();
-		$player = new Player();
-		$player->user = $game->admin;
-		$player->game = $game->id;
-		$player->pending = false;
-		$player->save();
-		echo json_encode(array('success' => true, 'game' => get_object_vars($game)));	
+		if ($game->save()) {
+			$player = new Player();
+			$player->user = $game->admin;
+			$player->game = $game->id;
+			$player->pending = false;
+			if ($player->save()) {
+				echo json_encode(array('success' => true, 'game' => get_object_vars($game)));
+			} else {
+				echo json_encode(array('success' => false, 'reason' => 'Unable to save player.'));	
+			}
+		} else {
+			echo json_encode(array('success' => false, 'reason' => 'Unable to save game.'));	
+		}
 	} else {
 		echo json_encode(array('success' => false, 'reason' => 'Invalid start date.'));
 	}
