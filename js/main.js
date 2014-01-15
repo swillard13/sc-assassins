@@ -54,7 +54,7 @@ function bindEvents(){
 				
 			},
 			error: function(){
-				alert('failure');
+				
 			}
 		});
 		e.preventDefault();
@@ -67,7 +67,9 @@ function bindEvents(){
 		$("#startDate").attr('min',dateString).attr('value',dateString);
 	})();
 
-	$(".bt-fs-dialog").fSelector({
+	(function(){
+		/*$.get('ajax/get_players.php',)*/
+		$(".bt-fs-dialog").fSelector({
 		closeOnSubmit: true,
 		facebookInvite: false,
 		showButtonSelectAll: false,
@@ -75,21 +77,20 @@ function bindEvents(){
 			if(response.length > 0){
 				for(var i = 0;i<response.length;i++){
 					var id = response[i];
-					var url = "https://graph.facebook.com/" + id + "/";
 					FB.api('/', 'POST', {
 						batch: [
 						{ method: 'GET', relative_url: id },
 						]
 					}, function (response) {
 						var data = $.parseJSON(response[0]['body']);
-						$('#inviteList').append($('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
+						$('.inviteList').append($('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
 							$(this).parent().remove();
 						})));
 					});
 				}
 			}
 		}
-	});
+	})})();
 
 	$('a[href$="#games"]').click(function() {
 		$('#games-list').empty();

@@ -13,19 +13,14 @@ if (!$facebook->getUser()) {
 	http_response_code(401);
 	exit;
 }
-$game = new Game();
-if (array_key_exists('gameId', $_GET)) {
-	$game->id = $_GET['gameId'];
-	if (!$game->load()) {
+header('Content-type: application/json');
+if (array_key_exists('id', $_GET)) {
+	if ($game = getGameForUser($facebook->getUser(), $_GET['id'])) {
+		echo $game->toJson();
+	} else {
 		http_response_code(404);
-		exit;
 	}
-	header('Content-type: application/json');
-	echo $game->toJson();
-} else {
-	if ($games = getGamesForUser($facebook->getUser())) {
-		header('Content-type: application/json');
-		echo json_encode($games);
-	} 
+} else if ($games = getGamesForUser($facebook->getUser())) {
+	echo json_encode($games); 
 }
 ?>
