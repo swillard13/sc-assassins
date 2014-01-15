@@ -51,10 +51,18 @@ input::-webkit-inner-spin-button {
     cursor:pointer;
 }
 
-#games-list .game-content {
+#games-list {
     display: none;
 }
 
-#games-list .active .game-content {
+#games-list.active {
+    display: block;
+}
+
+#current-game {
+    display: none;
+}
+
+#current-game.active {
     display: block;
 }
