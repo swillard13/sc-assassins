@@ -93,20 +93,14 @@ function bindEvents(){
 	})})();
 
 	$('a[href$="#games"]').click(function() {
-		$('#games-list').empty();
-		$.get('./ajax/get_games.php', function(data) {
-			if (data) {
-				$.each(data, function(key, entry){
-					$('#games-list').append(createGameTile(entry));
-				});
-			}
-		});
+		loadGames();
 	});
 
 	$('#current-game .game-back').click(function(){
 		$('#current-game').removeClass('active');
 		$('#games-list').addClass('active');
 		resetGameEdit(false);
+		loadGames();
 	});
 
 	$('#current-game .game-edit').click(function(){
@@ -161,14 +155,27 @@ function createGameTile(data) {
 	game.click(function() {
 		$('#current-game').addClass('active');
 		loadGameWithId($(this).data('id'));
+		$('#current-game').attr('data-id', $(this).data('id'));
 		$('#games-list').removeClass('active');
 	});
 	return game;
 }
 
+function loadGames() {
+	$('#games-list').empty();
+	$.get('./ajax/get_games.php', function(data) {
+		if (data) {
+			$.each(data, function(key, entry){
+				$('#games-list').append(createGameTile(entry));
+			});
+		}
+	});
+}
+
 function loadGameWithId(id) {
 	$.get('./ajax/get_games.php', {'id' : id}, function(data) { loadGame(data); });
 }
+
 function loadGame(data) {
 	$('#current-game .game-title').text(data.title);
 	$('#current-game .game-description').text(data.description);
@@ -184,7 +191,7 @@ function resetGameEdit(save, data) {
 		};
 	}
 	if (save) {
-		$.post('./ajax/update_game.php', {'id' : $('#current-game').attr('id')}.concat(data));
+		$.post('./ajax/update_game.php', $.extend({'id' : $('#current-game').data('id')}, data));
 	}
 	loadGame(data);
 	$('#current-game .game-title').remove("input").html(data.title).show();
