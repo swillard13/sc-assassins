@@ -13,6 +13,7 @@ if (!$facebook->getUser()) {
 	http_response_code(401);
 	exit;
 }
+$_GET['gameId'] = 13;
 if (array_key_exists('gameId', $_GET)) {
 	if ($players = getPlayersForGame($_GET['gameId'])) {
 		header('Content-type: application/json');

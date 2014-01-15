@@ -3,7 +3,6 @@ $(document).ready(function($){
 	$('a[href$="#games"]').click(function() {
 		$('#games-list').empty();
 		$.get('ajax/get_games.php', function(data) {
-			alert(data);
 			if (data) {
 				$.each(data, function(key, entry){
 					$('#games-list').append(createGameTile(entry));
@@ -34,22 +33,23 @@ function bindEvents(){
     		cookie     : true, // enable cookies to allow the server to access the session
     		xfbml      : true  // parse XFBML
     	});
+
 		FB.getLoginStatus(function(response){
 			if(response.status !== 'connected'){
 				$('#fblogin').modal('show');
+				FB.Event.subscribe('auth.authResponseChange', function(response) { 
+					if (response.status === 'connected') {
+						$('#fblogin').modal('hide');
+						connectActions();
+					} else if (response.status === 'not_authorized') {
+						//FB.login();
+					} else {
+
+					}
+				});
 			}
 			else{
 				connectActions();
-			}
-		});
-		FB.Event.subscribe('auth.authResponseChange', function(response) { 
-			if (response.status === 'connected') {
-				$('#fblogin').modal('hide');
-				connectActions();
-			} else if (response.status === 'not_authorized') {
-				//FB.login();
-			} else {
-
 			}
 		});
 	};
@@ -78,30 +78,6 @@ function bindEvents(){
 		$("#startDate").attr('min',dateString).attr('value',dateString);
 	})();
 
-	(function(){
-		/*$.get('ajax/get_players.php',)*/
-		$(".bt-fs-dialog").fSelector({
-		closeOnSubmit: true,
-		facebookInvite: false,
-		showButtonSelectAll: false,
-		onSubmit: function(response){
-			if(response.length > 0){
-				for(var i = 0;i<response.length;i++){
-					var id = response[i];
-					FB.api('/', 'POST', {
-						batch: [
-						{ method: 'GET', relative_url: id },
-						]
-					}, function (response) {
-						var data = $.parseJSON(response[0]['body']);
-						$('.inviteList').append($('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
-							$(this).parent().remove();
-						})));
-					});
-				}
-			}
-		}
-	})})();
 }
 
 function connectActions() {	
@@ -116,6 +92,55 @@ function connectActions() {
 				location.reload();
 			});
 		});
+	});
+
+	$.get('ajax/get_players.php', function(data){
+		if(data){
+			$.each(data, function(key, id){
+				FB.api('/', 'POST', {
+					batch: [
+					{ method: 'GET', relative_url: id },
+					]
+				}, function (response) {
+					var player = $.parseJSON(response[0]['body']);
+					addPlayerToList(player);
+				});
+			});
+		}
+	});
+
+	var players = [];
+	$(".bt-fs-dialog").fSelector({
+		closeOnSubmit: true,
+		facebookInvite: false,
+		showButtonSelectAll: false,
+		onPreStart: function(){
+			var selected = $('.inviteList div[data-id]');
+			$.each(selected, function(key, data){
+				var j = $(data);
+				players.push(parseInt(j.attr('data-id')));
+			});
+			console.log(players);
+		},
+		excludeIds: players,
+		onSubmit: function(response){
+			if(response.length > 0){
+				for(var i = 0;i<response.length;i++){
+					var id = response[i];
+					FB.api('/', 'POST', {
+						batch: [
+						{ method: 'GET', relative_url: id },
+						]
+					}, function (response) {
+						var data = $.parseJSON(response[0]['body']);
+						addPlayerToList(data);
+					});
+				}
+			}
+		},
+		onClose: function(){
+			
+		}
 	});
 }
 
@@ -149,5 +174,7 @@ function createGameTile(data) {
 }
 
 function addPlayerToList(data){
-	
+	$('.inviteList').append($('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
+		$(this).parent().remove();
+	})));
 }
