@@ -10,9 +10,25 @@ class Game extends Model {
 
 }
 
+function getGameForUser($userId, $gameId) {
+	$database = getDatabase();
+	$statement = $database->prepare('SELECT game.* FROM game JOIN player ON game.id = player.game
+									 WHERE player.user = ? AND game.id = ?');
+	$statement->bind_param('ii', $userId, $gameId);
+	$statement->execute();
+	if ($result = $statement->get_result()) {
+		if ($row = $result->fetch_assoc()) {
+			$game = new Game();
+			$game->loadFromRow($row);
+			return $game;
+		}
+	}
+	return false;
+}
+
 function getGamesForUser($userId) {
 	$database = getDatabase();
-	$statement = $database->prepare('SELECT * FROM game JOIN player ON game.id = player.game
+	$statement = $database->prepare('SELECT game.* FROM game JOIN player ON game.id = player.game
 									 WHERE player.user = ?');
 	$statement->bind_param('i', $userId);
 	$statement->execute();

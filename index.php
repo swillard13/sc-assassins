@@ -50,7 +50,14 @@
 		<div class ="tab-pane active" id="home">Home</div>
 		<div class="tab-pane" id="games">
 			<h3>My Games</h3>
-			<ul id="games-list"></ul>
+			<ul id="games-list" class="active"></ul>
+			<div id="current-game">
+				<button class="game-back">Back</button>
+				<button class="game-edit">Edit</button>
+				<h3 class="game-title"></h3>
+				<p class="game-description"></p>
+				<p class="game-start-date"></p>
+			</div>
 		</div>
 		<div class="tab-pane" id="create">
 			<h3>Create your Game</h3>

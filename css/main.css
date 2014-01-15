@@ -19,13 +19,7 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
-#games-list .game-content {
-    display: none;
-}
 
-#games-list .active .game-content {
-    display: block;
-}
 .inviteList {
     border: 1px solid #ccc;
     display:inline-block;
@@ -58,10 +52,18 @@ input::-webkit-inner-spin-button {
     cursor:pointer;
 }
 
-#games-list .game-content {
+#games-list {
     display: none;
 }
 
-#games-list .active .game-content {
+#games-list.active {
+    display: block;
+}
+
+#current-game {
+    display: none;
+}
+
+#current-game.active {
     display: block;
 }

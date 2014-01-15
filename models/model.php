@@ -13,13 +13,12 @@ abstract class Model {
 	public function save() {
 		$database = getDatabase();
 		if(!$database) http_response_code(400);
-		$insert = (isset($this->id)) ? false : $this->selectById();
+		$insert = (isset($this->id)) ? false : !$this->selectById();
 		return $this->saveToDatabase($insert, $database);
 	}
 
 	private function saveToDatabase($insert, $database) {
-		$members = get_object_vars($this);
-		unset($members['id']);
+		$members = $this->getMembers();
 		$types = array();
 		$params = array();
 		foreach ($members as $key => $value) {
@@ -58,6 +57,12 @@ abstract class Model {
 		}
 	}
 
+	public function getMembers() {
+		$members = get_object_vars($this);
+		unset($members['id']);
+		return $members;
+	}
+	
 	public function load() {
 		$result = $this->selectById();
 		if ($result) {

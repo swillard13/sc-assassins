@@ -1,15 +1,5 @@
 $(document).ready(function($){
 	bindEvents();
-	$('a[href$="#games"]').click(function() {
-		$('#games-list').empty();
-		$.get('ajax/get_games.php', function(data) {
-			if (data) {
-				$.each(data, function(key, entry){
-					$('#games-list').append(createGameTile(entry));
-				});
-			}
-		});
-	});
 });
 
 function bindEvents(){
@@ -78,6 +68,34 @@ function bindEvents(){
 		$("#startDate").attr('min',dateString).attr('value',dateString);
 	})();
 
+	$('a[href$="#games"]').click(function() {
+		loadGames();
+	});
+
+	$('#current-game .game-back').click(function(){
+		$('#current-game').removeClass('active');
+		$('#games-list').addClass('active');
+		resetGameEdit(false);
+		loadGames();
+	});
+
+	$('#current-game .game-edit').click(function(){
+		var title = $('#current-game .game-title').text();
+		var description = $('#current-game .game-description').text();
+		var startDate = $('#current-game .game-start-date').text();
+		$(this).after($('<button>').text('Cancel').addClass('game-cancel').click(function(){
+			resetGameEdit(false, {
+				title : title,
+				description : description,
+				startDate : startDate}
+			)
+		}));
+		$(this).after($('<button>').text('Save').addClass('game-save').click(function(){resetGameEdit(true)}));
+		$.editableFactory['text'].toEditable(title, $('#current-game .game-title').empty());
+		$.editableFactory['textarea'].toEditable(description, $('#current-game .game-description').empty());
+		$.editableFactory['date'].toEditable(startDate, $('#current-game .game-start-date').empty());
+		$(this).hide();
+	});
 }
 
 function connectActions() {	
@@ -158,17 +176,12 @@ function getDateString(){
 function createGameTile(data) {
 	var game = $('<li>');
 	game.append($('<h4>').text(data.title));
-	var content = $('<div>').addClass('game-content');
-	content.append($('<p>').text(data.description));
-	content.append($('<p>').text(data.startDate));
-	game.append(content);
-	game.attr('data-game-id', data.id);
+	game.attr('data-id', data.id);
 	game.click(function() {
-		if ($(this).hasClass('active')) {
-			$(this).removeClass('active');
-		} else {
-			$(this).addClass('active');
-		}
+		$('#current-game').addClass('active');
+		loadGameWithId($(this).data('id'));
+		$('#current-game').attr('data-id', $(this).data('id'));
+		$('#games-list').removeClass('active');
 	});
 	return game;
 }
@@ -177,4 +190,80 @@ function addPlayerToList(data){
 	$('.inviteList').append($('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
 		$(this).parent().remove();
 	})));
+}
+
+function loadGames() {
+	$('#games-list').empty();
+	$.get('./ajax/get_games.php', function(data) {
+		if (data) {
+			$.each(data, function(key, entry){
+				$('#games-list').append(createGameTile(entry));
+			});
+		}
+	});
+}
+
+function loadGameWithId(id) {
+	$.get('./ajax/get_games.php', {'id' : id}, function(data) { loadGame(data); });
+}
+
+function loadGame(data) {
+	$('#current-game .game-title').text(data.title);
+	$('#current-game .game-description').text(data.description);
+	$('#current-game .game-start-date').text(data.startDate);
+}
+
+function resetGameEdit(save, data) {
+	if (!data) {
+		data = {
+			title : $('#current-game .game-title input').val(),
+			description : $('#current-game .game-description textarea').val(),
+			startDate : $('#current-game .game-start-date input').val()
+		};
+	}
+	if (save) {
+		$.post('./ajax/update_game.php', $.extend({'id' : $('#current-game').data('id')}, data));
+	}
+	loadGame(data);
+	$('#current-game .game-title').remove("input").html(data.title).show();
+	$('#current-game .game-description').remove("input").html(data.description).show();
+	$('#current-game .game-start-date').remove("input").html(data.startDate).show();
+	$('#current-game .game-save').remove();
+	$('#current-game .game-cancel').remove();
+	$('#current-game .game-edit').show();
+}
+
+$.editableFactory = {
+    'text': {
+        toEditable: function($value, $this, $maxLength){
+            $('<input/>').addClass('form-control').attr('type', 'text').appendTo($this).val($value);
+        },
+        getValue: function($this){
+            return $this.children().val();
+        }
+    },
+    'textarea': {
+        toEditable: function($value, $this, $maxLength){
+            $('<textarea/>').addClass('form-control').appendTo($this)
+                .val($value).attr('maxlength', $maxLength).resizeTextArea();
+        },
+        getValue: function($this){
+            return $this.children().val();
+        }
+    },
+    'date': {
+        toEditable: function($value, $this, $maxLength){
+            $('<input/>').addClass('form-control').attr('type', 'date').appendTo($this).val($value);
+        },
+        getValue: function($this){
+            return $this.children().val();
+        }
+    },
+}
+
+$.fn.resizeTextArea = function() {
+    var scrollHeight = $(this).prop('scrollHeight');
+    var lineHeight = parseInt($(this).css('line-height').replace('px', ''));
+    var rows = scrollHeight / lineHeight;
+    $(this).attr('rows', rows);
 }
