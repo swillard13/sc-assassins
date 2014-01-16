@@ -54,8 +54,8 @@ function bindEvents(){
 			success: function(data){
 				$('#navbar a[href$="#games"]').tab('show');
 				loadGames();
-				viewGame(data.game.id);
 				resetForm();
+				viewGame(data.game.id);
 			},
 			error: function(){
 				
@@ -86,6 +86,9 @@ function bindEvents(){
 		var title = $('#current-game .game-title').text();
 		var description = $('#current-game .game-description').text();
 		var startDate = $('#current-game .game-start-date').text();
+		var players = [];
+		getPlayerList(players);
+		console.log('init players: ' + players);
 		$(this).after($('<button>').text('Cancel').addClass('game-cancel').click(function(){
 			resetGameEdit(false, {
 				title : title,
@@ -93,7 +96,7 @@ function bindEvents(){
 				startDate : startDate}
 				)
 		}));
-		$(this).after($('<button>').text('Save').addClass('game-save').click(function(){resetGameEdit(true)}));
+		$(this).after($('<button>').text('Save').addClass('game-save').click(function(){resetGameEdit(true, null, players)}));
 		$.editableFactory['text'].toEditable(title, $('#current-game .game-title').empty());
 		$.editableFactory['textarea'].toEditable(description, $('#current-game .game-description').empty());
 		$.editableFactory['date'].toEditable(startDate, $('#current-game .game-start-date').empty());
@@ -129,6 +132,14 @@ function getDateString(){
 	};
 	d = new Date();
 	return d.yyyymmdd();
+}
+
+function getPlayerList(players){
+	var selected = $('.inviteList div[data-id]');
+		$.each(selected, function(key, data){
+			var j = $(data);
+			players.push(parseInt(j.data('id')));
+	});
 }
 
 function loadPlayersWithId(id){
@@ -167,12 +178,7 @@ function initFriendSelector(){
 		showButtonSelectAll: false,
 		onPreStart: function(){
 			players.length = 0;
-			var selected = $('.inviteList div[data-id]');
-			$.each(selected, function(key, data){
-				var j = $(data);
-				players.push(parseInt(j.data('id')));
-			});
-			console.log(players);
+			getPlayerList(players);
 		},
 		excludeIds: players,
 		onSubmit: function(response){
@@ -223,7 +229,7 @@ function loadGame(data) {
 	$('#current-game .game-start-date').text(data.startDate);
 }
 
-function resetGameEdit(save, data) {
+function resetGameEdit(save, data, players) {
 	if (!data) {
 		data = {
 			title : $('#current-game .game-title input').val(),
@@ -232,6 +238,15 @@ function resetGameEdit(save, data) {
 		};
 	}
 	if (save) {
+		/*Array.prototype.diff = function(a) {
+   			return this.filter(function(i) {return !(a.indexOf(i) > -1);});
+		};*/
+		console.log('passed: ' + players);
+		var newPlayers = [];
+		getPlayerList(newPlayers);
+		console.log(newPlayers);
+		//var d = newPlayers.diff(players);
+		console.log(d);
 		$.post('./ajax/update_game.php', $.extend({'id' : $('#current-game').data('id')}, data));
 	}
 	loadGame(data);
