@@ -94,6 +94,10 @@ function bindEvents(){
 		$.editableFactory['text'].toEditable(title, $('#current-game .game-title').empty());
 		$.editableFactory['textarea'].toEditable(description, $('#current-game .game-description').empty());
 		$.editableFactory['date'].toEditable(startDate, $('#current-game .game-start-date').empty());
+		$('#current-game').append($('<div>').addClass('form-group').append(($('<a>').addClass('bt-fs-dialog').addClass('fbbutton').text('Invite Friends'))));
+		$('#current-game').append($('<div>').addClass('inviteList').addClass('form-group'));
+		loadPlayersWithId($('#current-game').attr('data-id'));
+		initFriendSelector();
 		$(this).hide();
 	});
 }
@@ -111,8 +115,20 @@ function connectActions() {
 			});
 		});
 	});
+}
 
-	$.get('ajax/get_players.php', function(data){
+function getDateString(){
+	Date.prototype.yyyymmdd = function() {
+		var yyyy = this.getFullYear().toString();
+		var mm = (this.getMonth()+1).toString();
+		var dd  = this.getDate().toString();
+		return yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]);
+	};
+	d = new Date();
+	return d.yyyymmdd();
+}
+function loadPlayersWithId(id){
+	$.get('ajax/get_players.php', {'id' : id}, function(data){
 		if(data){
 			$.each(data, function(key, id){
 				FB.api('/', 'POST', {
@@ -126,7 +142,15 @@ function connectActions() {
 			});
 		}
 	});
+}
 
+function addPlayerToList(data){
+	$('.inviteList').append($('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
+		$(this).parent().remove();
+	})));
+}
+
+function initFriendSelector(){
 	var players = [];
 	$(".bt-fs-dialog").fSelector({
 		closeOnSubmit: true,
@@ -162,17 +186,6 @@ function connectActions() {
 	});
 }
 
-function getDateString(){
-	Date.prototype.yyyymmdd = function() {
-		var yyyy = this.getFullYear().toString();
-		var mm = (this.getMonth()+1).toString();
-		var dd  = this.getDate().toString();
-		return yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]);
-	};
-	d = new Date();
-	return d.yyyymmdd();
-}
-
 function createGameTile(data) {
 	var game = $('<li>');
 	game.append($('<h4>').text(data.title));
@@ -186,11 +199,6 @@ function createGameTile(data) {
 	return game;
 }
 
-function addPlayerToList(data){
-	$('.inviteList').append($('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
-		$(this).parent().remove();
-	})));
-}
 
 function loadGames() {
 	$('#games-list').empty();
@@ -231,6 +239,8 @@ function resetGameEdit(save, data) {
 	$('#current-game .game-save').remove();
 	$('#current-game .game-cancel').remove();
 	$('#current-game .game-edit').show();
+	$('.inviteList').remove();
+	$('.bt-fs-dialog').remove();
 }
 
 $.editableFactory = {

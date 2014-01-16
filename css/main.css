@@ -31,8 +31,7 @@ input::-webkit-inner-spin-button {
     min-height:35px;
 }
 .inviteName {
-    margin-top: 3px;
-    margin-bottom:1px;
+    margin-top: 5px;
     margin-left: 5px;
     margin-right: 5px;
     padding: 3px;
