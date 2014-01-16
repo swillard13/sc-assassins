@@ -55,6 +55,7 @@ function bindEvents(){
 				$('#navbar a[href$="#games"]').tab('show');
 				loadGames();
 				viewGame(data.game.id);
+				resetForm();
 			},
 			error: function(){
 				
@@ -152,7 +153,7 @@ function getPlayerFbInfo(id){
 }
 
 
-function addPlayerToList(data){
+function addPlayerToList(data, accepted){
 	$('.inviteList').append($('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
 		$(this).parent().remove();
 	})));
@@ -242,6 +243,12 @@ function resetGameEdit(save, data) {
 	$('#current-game .game-edit').show();
 	$('.inviteList').remove();
 	$('.bt-fs-dialog').remove();
+}
+
+function resetForm(){
+	$('#name').text('');
+	$('#description').text('');
+	$('#startDate').value(getDateString());
 }
 
 $.editableFactory = {
