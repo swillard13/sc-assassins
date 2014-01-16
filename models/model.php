@@ -11,10 +11,7 @@ abstract class Model {
 	}
 
 	public function save() {
-		$database = getDatabase();
-		if(!$database) http_response_code(400);
-		$insert = (isset($this->id)) ? false : !$this->selectById();
-		return $this->saveToDatabase($insert, $database);
+		return $this->saveToDatabase(!isset($this->id), getDatabase());
 	}
 
 	private function saveToDatabase($insert, $database) {
@@ -42,7 +39,6 @@ abstract class Model {
 				$this->id = $database->insert_id;
 				return true;	
 			} else {
-				echo($database->error);
 				return false;
 			}
 		} else {
