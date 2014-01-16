@@ -13,9 +13,9 @@ if (!$facebook->getUser()) {
 	http_response_code(401);
 	exit;
 }
-$_GET['gameId'] = 13;
-if (array_key_exists('gameId', $_GET)) {
-	if ($players = getPlayersForGame($_GET['gameId'])) {
+
+if (array_key_exists('id', $_GET)) {
+	if ($players = getPlayersForGame($_GET['id'])) {
 		header('Content-type: application/json');
 		echo json_encode($players);
 	} else {
