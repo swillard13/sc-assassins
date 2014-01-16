@@ -14,9 +14,9 @@ if (!$facebook->getUser()) {
 	http_response_code(401);
 	exit;
 }
-//header('Content-type: application/json');
+header('Content-type: application/json');
 if (array_key_exists('id', $_POST)) {
-	if ($game = getGameForUser($facebook->getUser(), $_POST['id'])) {
+	if ($game = getGameForUser($facebook->getUser(), $_POST['id'], false)) {
 		if (array_key_exists('title', $_POST)) {
 			$game->title = $_POST['title'];
 		}
@@ -28,6 +28,9 @@ if (array_key_exists('id', $_POST)) {
 		}
 		if ($game->save()) {
 			echo json_encode(array('success' => true));
+		} else {
+			echo json_encode(array('success' => false));
+		}
 		}
 	} else { 
 		http_response_code(404);
