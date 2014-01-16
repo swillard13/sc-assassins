@@ -88,7 +88,7 @@ function bindEvents(){
 				title : title,
 				description : description,
 				startDate : startDate}
-			)
+				)
 		}));
 		$(this).after($('<button>').text('Save').addClass('game-save').click(function(){resetGameEdit(true)}));
 		$.editableFactory['text'].toEditable(title, $('#current-game .game-title').empty());
@@ -127,22 +127,28 @@ function getDateString(){
 	d = new Date();
 	return d.yyyymmdd();
 }
+
 function loadPlayersWithId(id){
 	$.get('ajax/get_players.php', {'id' : id}, function(data){
 		if(data){
 			$.each(data, function(key, id){
-				FB.api('/', 'POST', {
-					batch: [
-					{ method: 'GET', relative_url: id },
-					]
-				}, function (response) {
-					var player = $.parseJSON(response[0]['body']);
-					addPlayerToList(player);
-				});
+				getPlayerFbInfo(id);
 			});
 		}
 	});
 }
+
+function getPlayerFbInfo(id){
+	FB.api('/', 'POST', {
+		batch: [
+		{ method: 'GET', relative_url: id },
+		]
+	}, function (response) {
+		var player = $.parseJSON(response[0]['body']);
+		addPlayerToList(player);
+	});
+}
+
 
 function addPlayerToList(data){
 	$('.inviteList').append($('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
@@ -157,10 +163,11 @@ function initFriendSelector(){
 		facebookInvite: false,
 		showButtonSelectAll: false,
 		onPreStart: function(){
+			players.length = 0;
 			var selected = $('.inviteList div[data-id]');
 			$.each(selected, function(key, data){
 				var j = $(data);
-				players.push(parseInt(j.attr('data-id')));
+				players.push(parseInt(j.data('id')));
 			});
 			console.log(players);
 		},
@@ -168,15 +175,7 @@ function initFriendSelector(){
 		onSubmit: function(response){
 			if(response.length > 0){
 				for(var i = 0;i<response.length;i++){
-					var id = response[i];
-					FB.api('/', 'POST', {
-						batch: [
-						{ method: 'GET', relative_url: id },
-						]
-					}, function (response) {
-						var data = $.parseJSON(response[0]['body']);
-						addPlayerToList(data);
-					});
+					getPlayerFbInfo(response[i]);
 				}
 			}
 		},
@@ -244,36 +243,36 @@ function resetGameEdit(save, data) {
 }
 
 $.editableFactory = {
-    'text': {
-        toEditable: function($value, $this, $maxLength){
-            $('<input/>').addClass('form-control').attr('type', 'text').appendTo($this).val($value);
-        },
-        getValue: function($this){
-            return $this.children().val();
-        }
-    },
-    'textarea': {
-        toEditable: function($value, $this, $maxLength){
-            $('<textarea/>').addClass('form-control').appendTo($this)
-                .val($value).attr('maxlength', $maxLength).resizeTextArea();
-        },
-        getValue: function($this){
-            return $this.children().val();
-        }
-    },
-    'date': {
-        toEditable: function($value, $this, $maxLength){
-            $('<input/>').addClass('form-control').attr('type', 'date').appendTo($this).val($value);
-        },
-        getValue: function($this){
-            return $this.children().val();
-        }
-    },
+	'text': {
+		toEditable: function($value, $this, $maxLength){
+			$('<input/>').addClass('form-control').attr('type', 'text').appendTo($this).val($value);
+		},
+		getValue: function($this){
+			return $this.children().val();
+		}
+	},
+	'textarea': {
+		toEditable: function($value, $this, $maxLength){
+			$('<textarea/>').addClass('form-control').appendTo($this)
+			.val($value).attr('maxlength', $maxLength).resizeTextArea();
+		},
+		getValue: function($this){
+			return $this.children().val();
+		}
+	},
+	'date': {
+		toEditable: function($value, $this, $maxLength){
+			$('<input/>').addClass('form-control').attr('type', 'date').appendTo($this).val($value);
+		},
+		getValue: function($this){
+			return $this.children().val();
+		}
+	},
 }
 
 $.fn.resizeTextArea = function() {
-    var scrollHeight = $(this).prop('scrollHeight');
-    var lineHeight = parseInt($(this).css('line-height').replace('px', ''));
-    var rows = scrollHeight / lineHeight;
-    $(this).attr('rows', rows);
+	var scrollHeight = $(this).prop('scrollHeight');
+	var lineHeight = parseInt($(this).css('line-height').replace('px', ''));
+	var rows = scrollHeight / lineHeight;
+	$(this).attr('rows', rows);
 }
