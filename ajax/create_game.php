@@ -16,18 +16,13 @@ if (!$facebook->getUser()) {
 }
 header('Content-type: application/json');
 if (array_key_exists('title', $_POST) && array_key_exists('description', $_POST) && array_key_exists('startDate', $_POST)) {
-	
 	$game = new Game();
-	if (array_key_exists('id', $_POST)) {
-		$game->id = $_POST['id'];
-	}
 	$game->title = $_POST['title'];
 	$game->description = $_POST['description'];
 	list($y,$m,$d) = explode('-',$_POST['startDate']);
 	if (checkdate($m, $d, $y)) {
 		$game->startDate = $_POST['startDate'];	
 		$game->admin = $facebook->getUser();
-		$game->save();
 		if ($game->save()) {
 			$player = new Player();
 			$player->user = $game->admin;

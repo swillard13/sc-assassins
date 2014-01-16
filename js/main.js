@@ -52,7 +52,9 @@ function bindEvents(){
 			url: url,
 			data: $(this).serialize(),
 			success: function(data){
-				
+				$('#navbar a[href$="#games"]').tab('show');
+				loadGames();
+				viewGame(data.game.id);
 			},
 			error: function(){
 				
@@ -178,12 +180,16 @@ function createGameTile(data) {
 	game.append($('<h4>').text(data.title));
 	game.attr('data-id', data.id);
 	game.click(function() {
-		$('#current-game').addClass('active');
-		loadGameWithId($(this).data('id'));
-		$('#current-game').attr('data-id', $(this).data('id'));
-		$('#games-list').removeClass('active');
+		viewGame($(this).data('id'));
 	});
 	return game;
+}
+
+function viewGame(id) {
+	$('#current-game').addClass('active');
+	loadGameWithId(id);
+	$('#current-game').attr('data-id', id);
+	$('#games-list').removeClass('active');
 }
 
 function addPlayerToList(data){
