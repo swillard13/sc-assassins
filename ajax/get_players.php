@@ -22,6 +22,6 @@ if (array_key_exists('id', $_GET)) {
 		http_response_code(404);
 	}
 } else {
-	http_reponse_code(400);
+	http_response_code(400);
 }
 ?>
