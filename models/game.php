@@ -13,7 +13,7 @@ class Game extends Model {
 function getGameForUser($userId, $gameId, $admin) {
 	$database = getDatabase();
 	$statement = $database->prepare(sprintf('SELECT game.* FROM game JOIN player ON game.id = player.game
-									 WHERE %s = ? AND game.id = ?'), ($admin) ? 'game.admin' : 'player.id');
+									 WHERE %s = ? AND game.id = ?', ($admin) ? 'game.admin' : 'player.user'));
 	$statement->bind_param('ii', $userId, $gameId);
 	$statement->execute();
 	if ($result = $statement->get_result()) {
