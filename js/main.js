@@ -179,9 +179,6 @@ function initFriendSelector(){
 				}
 			}
 		},
-		onClose: function(){
-			
-		}
 	});
 }
 
