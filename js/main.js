@@ -86,9 +86,6 @@ function bindEvents(){
 		var title = $('#current-game .game-title').text();
 		var description = $('#current-game .game-description').text();
 		var startDate = $('#current-game .game-start-date').text();
-		var players = [];
-		getPlayerList(players);
-		console.log('init players: ' + players);
 		$(this).after($('<button>').text('Cancel').addClass('game-cancel').click(function(){
 			resetGameEdit(false, {
 				title : title,
@@ -96,13 +93,13 @@ function bindEvents(){
 				startDate : startDate}
 				)
 		}));
-		$(this).after($('<button>').text('Save').addClass('game-save').click(function(){resetGameEdit(true, null, players)}));
+		$(this).after($('<button>').text('Save').addClass('game-save').click(function(){resetGameEdit(true, null)}));
 		$.editableFactory['text'].toEditable(title, $('#current-game .game-title').empty());
 		$.editableFactory['textarea'].toEditable(description, $('#current-game .game-description').empty());
 		$.editableFactory['date'].toEditable(startDate, $('#current-game .game-start-date').empty());
-		$('#current-game').append($('<div>').addClass('form-group').append(($('<a>').addClass('bt-fs-dialog').addClass('fbbutton').text('Invite Friends'))));
 		$('#current-game').append($('<div>').addClass('inviteList').addClass('form-group'));
-		loadPlayersWithId($('#current-game').attr('data-id'));
+		$('#current-game').append($('<div>').addClass('form-group').append(($('<a>').addClass('bt-fs-dialog').addClass('fbbutton').text('Invite Friends'))));
+		loadPlayersWithId($('#current-game').data('id'));
 		initFriendSelector();
 		$(this).hide();
 	});
@@ -142,23 +139,26 @@ function getPlayerList(players){
 	});
 }
 
-function loadPlayersWithId(id){
-	$.get('ajax/get_players.php', {'id' : id}, function(data){
+function loadPlayersWithId(gameId){
+	$.get('ajax/get_players.php', {'id' : gameId}, function(data){
 		if(data){
-			$.each(data, function(key, id){
-				getPlayerFbInfo(id);
+			$.each(data, function(key, playerId){
+				getPlayerFbInfo(playerId, false);
 			});
 		}
 	});
 }
 
-function getPlayerFbInfo(id){
+function getPlayerFbInfo(playerId, send){
 	FB.api('/', 'POST', {
 		batch: [
-		{ method: 'GET', relative_url: id },
+		{ method: 'GET', relative_url: playerId },
 		]
 	}, function (response) {
 		var player = $.parseJSON(response[0]['body']);
+		if(send){
+			$.post('./ajax/add_player.php', {'gameId' : $('#current-game').data('id'), 'playerId' : playerId});
+		}
 		addPlayerToList(player);
 	});
 }
@@ -174,7 +174,6 @@ function initFriendSelector(){
 	var players = [];
 	$(".bt-fs-dialog").fSelector({
 		closeOnSubmit: true,
-		facebookInvite: false,
 		showButtonSelectAll: false,
 		onPreStart: function(){
 			players.length = 0;
@@ -184,7 +183,7 @@ function initFriendSelector(){
 		onSubmit: function(response){
 			if(response.length > 0){
 				for(var i = 0;i<response.length;i++){
-					getPlayerFbInfo(response[i]);
+					getPlayerFbInfo(response[i], true);
 				}
 			}
 		},
@@ -229,7 +228,7 @@ function loadGame(data) {
 	$('#current-game .game-start-date').text(data.startDate);
 }
 
-function resetGameEdit(save, data, players) {
+function resetGameEdit(save, data) {
 	if (!data) {
 		data = {
 			title : $('#current-game .game-title input').val(),
@@ -238,15 +237,6 @@ function resetGameEdit(save, data, players) {
 		};
 	}
 	if (save) {
-		/*Array.prototype.diff = function(a) {
-   			return this.filter(function(i) {return !(a.indexOf(i) > -1);});
-		};*/
-		console.log('passed: ' + players);
-		var newPlayers = [];
-		getPlayerList(newPlayers);
-		console.log(newPlayers);
-		//var d = newPlayers.diff(players);
-		console.log(d);
 		$.post('./ajax/update_game.php', $.extend({'id' : $('#current-game').data('id')}, data));
 	}
 	loadGame(data);
