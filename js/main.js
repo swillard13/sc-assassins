@@ -163,10 +163,20 @@ function getPlayerFbInfo(playerId, send){
 	});
 }
 
-
 function addPlayerToList(data, accepted){
 	$('.inviteList').append($('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
-		$(this).parent().remove();
+		var playerId = $(this).parent().data('id');
+		$.ajax({
+			type: 'POST',
+			url: './ajax/remove_player.php',
+			data: {'gameId' : $('#current-game').data('id'), 'playerId' : playerId},
+			success: function(){
+				$('.inviteName[data-id=' + playerId + ']').remove();
+			},
+			error: function(){
+				
+			}
+		});
 	})));
 }
 

@@ -19,11 +19,11 @@ if (array_key_exists('gameId', $_POST) && array_key_exists('playerId', $_POST)) 
 		$player = new Player();
 		$player->user = $_POST['playerId'];
 		$player->game = $game->id;
-		$player->pending = 1;
-		if ($player->save()) {
+		if($player->remove()){
 			echo json_encode(array('success' => true));
-		} else {
-			echo json_encode(array('success' => false));	
+		}
+		else{
+			echo json_encode(array('success' => false));
 		}
 	} else {
 		http_response_code(401);

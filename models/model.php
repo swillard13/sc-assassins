@@ -14,6 +14,17 @@ abstract class Model {
 		return $this->saveToDatabase(!isset($this->id), getDatabase());
 	}
 
+	public function remove() {
+		return $this->removeFromDatabase($this->user, $this->game, getDatabase());
+	}
+	
+	public function removeFromDatabase($userId, $gameId, $database){
+		$statement = $database->prepare(sprintf('DELETE FROM player WHERE user='.$userId.' AND game='.$gameId));
+		$statement->execute();
+		return true;
+
+	}
+
 	private function saveToDatabase($insert, $database) {
 		$members = $this->getMembers();
 		$types = array();
