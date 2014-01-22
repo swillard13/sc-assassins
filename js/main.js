@@ -191,7 +191,7 @@ function initFriendSelector(){
 		},
 		excludeIds: players,
 		onSubmit: function(response){
-			if(response.length > 0){
+			if(response !== null && response.length > 0){
 				for(var i = 0;i<response.length;i++){
 					getPlayerFbInfo(response[i], true);
 				}

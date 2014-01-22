@@ -63,6 +63,8 @@
       selected_friends.push(parseInt($(this).val().split('-')[1], 10));
     });
 
+    if(selected_friends.length === 0) return;
+
     if ( fsOptions.facebookInvite === true ){
       
       var friends = selected_friends.join();
@@ -72,7 +74,10 @@
         message: fsOptions.lang.facebookInviteMessage,
         to: friends
       },function(response){
-
+        if(response.error_message){
+          fsOptions.onSubmit(null);
+          return;
+        }
         if ( response !== null ){
           fsOptions.onSubmit(selected_friends);
 
@@ -80,7 +85,6 @@
             _close();
           }
         }
-
       });
     }
     else{
@@ -90,7 +94,6 @@
         _close();
       }
     }
-
   },
 
   _dialogBox = function() {
