@@ -19,7 +19,8 @@ abstract class Model {
 	}
 	
 	public function removeFromDatabase($userId, $gameId, $database){
-		$statement = $database->prepare(sprintf('DELETE FROM player WHERE user='.$userId.' AND game='.$gameId));
+		$statement = $database->prepare(sprintf('DELETE FROM %s WHERE id = ?', $this->getTableName()));
+		$statement->bind_param('i', $this->id);
 		$statement->execute();
 		return true;
 
