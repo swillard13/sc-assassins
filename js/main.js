@@ -140,6 +140,7 @@ function getPlayerList(players){
 }
 
 function loadPlayersWithId(gameId){
+	console.log($("#current-game").data('id'));
 	$.get('ajax/get_players.php', {'id' : gameId}, function(data){
 		if(data){
 			$.each(data, function(key, playerId){
@@ -157,7 +158,7 @@ function getPlayerFbInfo(playerId, send){
 	}, function (response) {
 		var player = $.parseJSON(response[0]['body']);
 		if(send){
-			$.post('./ajax/add_player.php', {'gameId' : $('#current-game').data('id'), 'playerId' : playerId});
+			$.get('./ajax/add_player.php', {'gameId' : $('#current-game').data('id'), 'playerId' : playerId});
 		}
 		addPlayerToList(player);
 	});
