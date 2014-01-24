@@ -52,9 +52,9 @@ function bindEvents(){
 			url: url,
 			data: $(this).serialize(),
 			success: function(data){
+				resetForm();
 				$('#navbar a[href$="#games"]').tab('show');
 				loadGames();
-				resetForm();
 				viewGame(data.game.id);
 			},
 			error: function(){
@@ -158,14 +158,19 @@ function getPlayerFbInfo(playerId, send){
 	}, function (response) {
 		var player = $.parseJSON(response[0]['body']);
 		if(send){
-			$.get('./ajax/add_player.php', {'gameId' : $('#current-game').data('id'), 'playerId' : playerId});
+			$.post('./ajax/add_player.php', {'gameId' : $('#current-game').data('id'), 'playerId' : playerId});
 		}
 		addPlayerToList(player);
 	});
 }
 
 function addPlayerToList(data, accepted){
-	$('.inviteList').append($('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
+	var tile = createPlayerTile(data);
+	$('.inviteList').append(tile);
+}
+
+function createPlayerTile(data){
+	var tile = $('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
 		var playerId = $(this).parent().data('id');
 		$.ajax({
 			type: 'POST',
@@ -178,7 +183,8 @@ function addPlayerToList(data, accepted){
 				
 			}
 		});
-	})));
+	}));
+	return tile;
 }
 
 function initFriendSelector(){
@@ -266,6 +272,7 @@ function resetGameEdit(save, data) {
 function resetForm(){
 	$('#name').text('');
 	$('#description').text('');
+	console.log($('#startDate').value());
 	$('#startDate').value(getDateString());
 }
 
