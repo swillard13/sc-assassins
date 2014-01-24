@@ -30,7 +30,7 @@ input::-webkit-inner-spin-button {
     max-width:50%;
     min-height:35px;
 }
-.inviteName {
+.playerTile {
     margin-top: 5px;
     margin-left: 5px;
     margin-right: 5px;
@@ -42,7 +42,7 @@ input::-webkit-inner-spin-button {
     background:#ccc;
     display:inline-block;
 }
-.inviteName > div{
+.playerTile > div{
     float:left;
 }
 .removePlayer {

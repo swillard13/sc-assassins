@@ -52,10 +52,10 @@ function bindEvents(){
 			url: url,
 			data: $(this).serialize(),
 			success: function(data){
-				resetForm();
 				$('#navbar a[href$="#games"]').tab('show');
 				loadGames();
 				viewGame(data.game.id);
+				resetForm();
 			},
 			error: function(){
 				
@@ -68,7 +68,7 @@ function bindEvents(){
 
 	(function(){
 		var dateString = getDateString();
-		$("#startDate").attr('min',dateString).attr('value',dateString);
+		$("#startDate").attr('min', dateString).attr('value',dateString);
 	})();
 
 	$('a[href$="#games"]').click(function() {
@@ -170,14 +170,14 @@ function addPlayerToList(data, accepted){
 }
 
 function createPlayerTile(data){
-	var tile = $('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
+	var tile = $('<div>').attr('data-id',data.id).attr('class', 'playerTile').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
 		var playerId = $(this).parent().data('id');
 		$.ajax({
 			type: 'POST',
 			url: './ajax/remove_player.php',
 			data: {'gameId' : $('#current-game').data('id'), 'playerId' : playerId},
 			success: function(){
-				$('.inviteName[data-id=' + playerId + ']').remove();
+				$('.playerTile[data-id=' + playerId + ']').remove();
 			},
 			error: function(){
 				
@@ -270,10 +270,9 @@ function resetGameEdit(save, data) {
 }
 
 function resetForm(){
-	$('#name').text('');
-	$('#description').text('');
-	console.log($('#startDate').value());
-	$('#startDate').value(getDateString());
+	$('#name').val('');
+	$('#description').val('');
+	$('#startDate').val(getDateString());
 }
 
 $.editableFactory = {
