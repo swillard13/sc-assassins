@@ -15,10 +15,7 @@ if (!$facebook->getUser()) {
 	exit;
 }
 if (array_key_exists('gameId', $_POST) && array_key_exists('playerId', $_POST)) {
-	if ($game = getGameForUser($facebook->getUser(), $_POST['gameId'], true)) {
-		$player = new Player();
-		$player->user = $_POST['playerId'];
-		$player->game = $game->id;
+	if ($player = getPlayerForGame($_POST['gameId'], $facebook->getUser())) {
 		if($player->remove()){
 			echo json_encode(array('success' => true));
 		}

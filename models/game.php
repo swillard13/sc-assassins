@@ -1,5 +1,6 @@
 <?php
 require_once('model.php');
+require_once('player.php');
 
 class Game extends Model {
 
@@ -8,6 +9,16 @@ class Game extends Model {
 	public $startDate;
 	public $admin;
 
+	public function startGame() {
+		$players = getPlayersForGame($this->id);
+		shuffle($players);
+		for ($i = 0; $i < len($players) - 1; $i++) {
+			$players[$i]->target = $players[$i+1]->id;
+			$players[$i]->save();
+		}
+		$players[len($players) - 1]->target = $players[0];
+		$players[len($players) - 1]->save();
+	}
 }
 
 function getGameForUser($userId, $gameId, $admin) {
