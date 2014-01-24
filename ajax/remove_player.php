@@ -15,15 +15,19 @@ if (!$facebook->getUser()) {
 	exit;
 }
 if (array_key_exists('gameId', $_POST) && array_key_exists('playerId', $_POST)) {
-	if ($player = getPlayerForGame($_POST['gameId'], $facebook->getUser())) {
-		if($player->remove()){
-			echo json_encode(array('success' => true));
-		}
-		else{
-			echo json_encode(array('success' => false));
+	if (getGameForUser($facebook->getUser(), $_POST['gameId'], true)) {
+		if ($player = getPlayerForGame($_POST['gameId'], $_POST['playerId'])) {
+			if($player->remove()){
+				echo json_encode(array('success' => true));
+			}
+			else{
+				echo json_encode(array('success' => false));
+			}
+		} else {
+			http_response_code(404);
 		}
 	} else {
-		http_response_code(401);
+		http_response_Code(401);
 	}
 } else {
 	http_response_code(400);
