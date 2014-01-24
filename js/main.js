@@ -205,6 +205,7 @@ function createGameTile(data) {
 	var game = $('<li>');
 	game.append($('<h4>').text(data.title));
 	game.attr('data-id', data.id);
+	game.data('id', data.id);
 	game.click(function() {
 		viewGame($(this).data('id'));
 	});
@@ -215,6 +216,7 @@ function viewGame(id) {
 	$('#current-game').addClass('active');
 	loadGameWithId(id);
 	$('#current-game').attr('data-id', id);
+	$('#current-game').data('id', id);
 	$('#games-list').removeClass('active');
 }
 
