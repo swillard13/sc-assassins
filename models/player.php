@@ -29,14 +29,16 @@ function getPlayerForGame($gameId, $userId) {
 
 function getPlayersForGame($gameId) {
 	$database = getDatabase();
-	$statement = $database->prepare('SELECT user FROM player JOIN game ON player.game = game.id
+	$statement = $database->prepare('SELECT player.* FROM player JOIN game ON player.game = game.id
 									 WHERE player.game = ?');
 	$statement->bind_param('i', $gameId);
 	$statement->execute();
 	if ($result = $statement->get_result()) {
 		$players = array();
 		while ($row = $result->fetch_assoc()) {
-			array_push($players, $row['user']);
+			$player = new Player();
+			$player->loadFromRow($row);
+			array_push($players, $player);
 		}
 		return $players;
 	}

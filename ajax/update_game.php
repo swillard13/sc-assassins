@@ -31,10 +31,10 @@ if (array_key_exists('id', $_POST)) {
 		} else {
 			echo json_encode(array('success' => false));
 		}
-		}
 	} else { 
 		http_response_code(404);
 	}
 } else {
 	http_response_code(400);
 }
+?>

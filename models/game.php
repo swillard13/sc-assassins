@@ -9,15 +9,20 @@ class Game extends Model {
 	public $startDate;
 	public $admin;
 
-	public function startGame() {
+	public function start() {
 		$players = getPlayersForGame($this->id);
 		shuffle($players);
-		for ($i = 0; $i < len($players) - 1; $i++) {
+		for ($i = 0; $i < count($players) - 1; $i++) {
 			$players[$i]->target = $players[$i+1]->id;
-			$players[$i]->save();
+			if (!$players[$i]->save()) {
+				return false;
+			}
 		}
-		$players[len($players) - 1]->target = $players[0];
-		$players[len($players) - 1]->save();
+		$players[count($players) - 1]->target = $players[0]->id;
+		if (!$players[count($players) - 1]->save()) {
+			return false;
+		}
+		return true;
 	}
 }
 

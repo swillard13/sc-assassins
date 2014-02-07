@@ -6,38 +6,32 @@ require_once('../models/player.php');
 
 $facebook = new Facebook(array(
 	'appId' => FACEBOOK_APP_ID,
-    'secret' => FACEBOOK_APP_SECRET,
-    'fileUpload' => FACEBOOK_FILE_UPLOAD, 
-    'allowSignedRequest' => FACEBOOK_ALLOW_SIGNED_REQUEST,
-));
+	'secret' => FACEBOOK_APP_SECRET,
+	'fileUpload' => FACEBOOK_FILE_UPLOAD, 
+	'allowSignedRequest' => FACEBOOK_ALLOW_SIGNED_REQUEST,
+	));
 if (!$facebook->getUser()) {
 	http_response_code(401);
 	exit;
 }
 header('Content-type: application/json');
-if (array_key_exists('title', $_POST) && array_key_exists('description', $_POST) && array_key_exists('startDate', $_POST)) {
+if (array_key_exists('title', $_POST) && array_key_exists('description', $_POST)) {
 	$game = new Game();
 	$game->title = $_POST['title'];
 	$game->description = $_POST['description'];
-	list($y,$m,$d) = explode('-',$_POST['startDate']);
-	if (checkdate($m, $d, $y)) {
-		$game->startDate = $_POST['startDate'];	
-		$game->admin = $facebook->getUser();
-		if ($game->save()) {
-			$player = new Player();
-			$player->user = $game->admin;
-			$player->game = $game->id;
-			$player->pending = 0;
-			if ($player->save()) {
-				echo json_encode(array('success' => true, 'game' => get_object_vars($game)));
-			} else {
-				echo json_encode(array('success' => false, 'reason' => 'Unable to save player.'));	
-			}
+	$game->admin = $facebook->getUser();
+	if ($game->save()) {
+		$player = new Player();
+		$player->user = $game->admin;
+		$player->game = $game->id;
+		$player->pending = 0;
+		if ($player->save()) {
+			echo json_encode(array('success' => true, 'game' => get_object_vars($game)));
 		} else {
-			echo json_encode(array('success' => false, 'reason' => 'Unable to save game.'));	
+			echo json_encode(array('success' => false, 'reason' => 'Unable to save player.'));	
 		}
 	} else {
-		echo json_encode(array('success' => false, 'reason' => 'Invalid start date.'));
+		echo json_encode(array('success' => false, 'reason' => 'Unable to save game.'));	
 	}
 }  else {
 	http_response_code(400);

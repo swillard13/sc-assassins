@@ -30,7 +30,7 @@ input::-webkit-inner-spin-button {
     max-width:50%;
     min-height:35px;
 }
-.inviteName {
+.playerTile {
     margin-top: 5px;
     margin-left: 5px;
     margin-right: 5px;
@@ -42,7 +42,7 @@ input::-webkit-inner-spin-button {
     background:#ccc;
     display:inline-block;
 }
-.inviteName > div{
+.playerTile > div{
     float:left;
 }
 .removePlayer {
@@ -53,6 +53,10 @@ input::-webkit-inner-spin-button {
 
 #games-list {
     display: none;
+    list-style: none;
+}
+#games-list li{
+    display:block;
 }
 
 #games-list.active {
@@ -69,4 +73,14 @@ input::-webkit-inner-spin-button {
 
 .admin-control {
     display: none;
+}}
+
+.gameTile{
+    border: 3px solid #0c3;
+    display:inline-block;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin: 10px;
+    padding: 10px;
 }

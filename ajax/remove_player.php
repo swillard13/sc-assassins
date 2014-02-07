@@ -14,6 +14,7 @@ if (!$facebook->getUser()) {
 	http_response_code(401);
 	exit;
 }
+header('Content-type: application/json');
 if (array_key_exists('gameId', $_POST) && array_key_exists('playerId', $_POST)) {
 	if (getGameForUser($facebook->getUser(), $_POST['gameId'], true)) {
 		if ($player = getPlayerForGame($_POST['gameId'], $_POST['playerId'])) {

@@ -16,7 +16,7 @@ if (!$facebook->getUser()) {
 header('Content-type: application/json');
 if (array_key_exists('id', $_GET)) {
 	if ($game = getGameForUser($facebook->getUser(), $_GET['id'], false)) {
-		echo $game->toJson();
+		echo json_encode(array_merge(get_object_vars($game), array('admin' => $game->admin == $facebook->getUser())));
 	} else {
 		http_response_code(404);
 	}

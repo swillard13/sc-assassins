@@ -54,8 +54,8 @@ function bindEvents(){
 			success: function(data){
 				$('#navbar a[href$="#games"]').tab('show');
 				loadGames();
-				resetForm();
 				viewGame(data.game.id);
+				resetForm();
 			},
 			error: function(){
 				
@@ -142,6 +142,7 @@ function getPlayerList(players){
 }
 
 function loadPlayersWithId(gameId){
+	console.log($("#current-game").data('id'));
 	$.get('ajax/get_players.php', {'id' : gameId}, function(data){
 		if(data){
 			$.each(data, function(key, playerId){
@@ -166,20 +167,26 @@ function getPlayerFbInfo(playerId, send){
 }
 
 function addPlayerToList(data, accepted){
-	$('.inviteList').append($('<div>').attr('data-id',data.id).attr('class', 'inviteName').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
+	var tile = createPlayerTile(data);
+	$('.inviteList').append(tile);
+}
+
+function createPlayerTile(data){
+	var tile = $('<div>').attr('data-id',data.id).attr('class', 'playerTile').append($('<div>').text(data.name)).append($('<span>').attr('title','Remove').attr('class','removePlayer').html('&times').click(function(){
 		var playerId = $(this).parent().data('id');
 		$.ajax({
 			type: 'POST',
 			url: './ajax/remove_player.php',
 			data: {'gameId' : $('#current-game').data('id'), 'playerId' : playerId},
 			success: function(){
-				$('.inviteName[data-id=' + playerId + ']').remove();
+				$('.playerTile[data-id=' + playerId + ']').remove();
 			},
 			error: function(){
 				
 			}
 		});
-	})));
+	}));
+	return tile;
 }
 
 function initFriendSelector(){
@@ -204,7 +211,7 @@ function initFriendSelector(){
 
 function createGameTile(data) {
 	var game = $('<li>');
-	game.append($('<h4>').text(data.title));
+	game.append($('<div>').addClass('gameTile').append($('<h4>').text(data.title)));
 	game.attr('data-id', data.id);
 	game.data('id', data.id);
 	game.click(function() {
@@ -223,12 +230,15 @@ function viewGame(id) {
 
 function loadGames() {
 	$('#games-list').empty();
+	$('#games-list').append($('<img>').attr('src','./img/ajax-loader.gif').addClass('loading'));
 	$.get('./ajax/get_games.php', function(data) {
 		if (data) {
 			$.each(data, function(key, entry){
 				$('#games-list').append(createGameTile(entry));
 			});
 		}
+	}).done(function(){
+		$('.loading').remove();
 	});
 }
 
@@ -252,7 +262,6 @@ function resetGameEdit(save, data) {
 		data = {
 			title : $('#current-game .game-title input').val(),
 			description : $('#current-game .game-description textarea').val(),
-			startDate : $('#current-game .game-start-date input').val()
 		};
 	}
 	if (save) {
@@ -261,7 +270,6 @@ function resetGameEdit(save, data) {
 	loadGame(data);
 	$('#current-game .game-title').remove("input").html(data.title).show();
 	$('#current-game .game-description').remove("input").html(data.description).show();
-	$('#current-game .game-start-date').remove("input").html(data.startDate).show();
 	$('#current-game .game-save').remove();
 	$('#current-game .game-cancel').remove();
 	$('#current-game .game-edit').show();
@@ -270,8 +278,8 @@ function resetGameEdit(save, data) {
 }
 
 function resetForm(){
-	$('#name').text('');
-	$('#description').text('');
+	$('#name').val('');
+	$('#description').val('');
 }
 
 $.editableFactory = {

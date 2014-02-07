@@ -11,7 +11,7 @@
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width">
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-	<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
+	<script>window.jQuery || document.write('<script src="./js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/chosen.min.css">
 	<link rel="stylesheet" href="css/main.css">
@@ -30,9 +30,15 @@
 <body>
 	<div id="fb-root"></div>
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<a class="navbar-brand" href="./">SC-Assassins</a>
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
 		<div class="collapse navbar-collapse" role="navigation">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="/">SC-Assassins</a>
 			</div>
 			<ul class="nav navbar-nav" id="navbar">
 				<li class="active"><a href="#home" data-toggle="tab">Home</a></li>
@@ -46,6 +52,7 @@
 			</ul>
 		</div>
 	</nav>
+
 	<div class="tab-content">
 		<div class ="tab-pane active" id="home">Home</div>
 		<div class="tab-pane" id="games">
@@ -65,17 +72,18 @@
 			<form id="createForm" role="form" method="post" action="ajax/create_game.php">
 				<div class="form-group">
 					<label for="name">Game Name</label>
-					<input id="name" class="form-control" type="text" name="title" placeholder="Give your game a name" style="width:25%;" required>
+					<input id="name" class="form-control" type="text" name="title" placeholder="Give your game a name" style="width:25%;min-width:150px;" required>
 				</div>
 				<div class="form-group">
 					<label for="gameDescription">Game Description</label>
-					<textarea id="description" class="form-control" rows="5" name="description" form="createForm" placeholder="Give rules or information about the game" style="width:25%;"></textarea>
+					<textarea id="description" class="form-control" rows="5" name="description" form="createForm" placeholder="Give rules or information about the game" style="width:25%;min-width:150px;"></textarea>
 				</div>
 				<div><button type="submit" class="btn btn-default">Create</button></div>
 			</form>
 		</div>
 		<div class="tab-pane" id="leaders">Leaderboards</div>
 	</div>
+
 	<div data-backdrop='static' data-keyboard='false' class="modal fade" id="fblogin" tabindex="-1" role="dialog" aria-labelledby="fblogin" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
