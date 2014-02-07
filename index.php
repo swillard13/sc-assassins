@@ -53,10 +53,11 @@
 			<ul id="games-list" class="active"></ul>
 			<div id="current-game">
 				<button class="game-back">Back</button>
-				<button class="game-edit">Edit</button>
+				<button class="game-edit admin-control">Edit</button>
 				<h3 class="game-title"></h3>
 				<p class="game-description"></p>
 				<p class="game-start-date"></p>
+				<button class="game-start admin-control">Start Game</button>
 			</div>
 		</div>
 		<div class="tab-pane" id="create">
@@ -69,10 +70,6 @@
 				<div class="form-group">
 					<label for="gameDescription">Game Description</label>
 					<textarea id="description" class="form-control" rows="5" name="description" form="createForm" placeholder="Give rules or information about the game" style="width:25%;"></textarea>
-				</div>
-				<div class="form-group">
-					<label for="startDate">Start Date</label>
-					<input id="startDate" class="form-control" type="date" name="startDate" style="width:20%;" required>
 				</div>
 				<div><button type="submit" class="btn btn-default">Create</button></div>
 			</form>

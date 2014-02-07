@@ -66,11 +66,6 @@ function bindEvents(){
 
 	$('[required]').siblings('label').append($('<span style="color: #FF0000;">*</span>'));
 
-	(function(){
-		var dateString = getDateString();
-		$("#startDate").attr('min',dateString).attr('value',dateString);
-	})();
-
 	$('a[href$="#games"]').click(function() {
 		loadGames();
 	});
@@ -85,23 +80,30 @@ function bindEvents(){
 	$('#current-game .game-edit').click(function(){
 		var title = $('#current-game .game-title').text();
 		var description = $('#current-game .game-description').text();
-		var startDate = $('#current-game .game-start-date').text();
 		$(this).after($('<button>').text('Cancel').addClass('game-cancel').click(function(){
 			resetGameEdit(false, {
-				title : title,
-				description : description,
-				startDate : startDate}
-				)
+					title : title,
+					description : description,
+				}
+			)
 		}));
 		$(this).after($('<button>').text('Save').addClass('game-save').click(function(){resetGameEdit(true, null)}));
 		$.editableFactory['text'].toEditable(title, $('#current-game .game-title').empty());
 		$.editableFactory['textarea'].toEditable(description, $('#current-game .game-description').empty());
-		$.editableFactory['date'].toEditable(startDate, $('#current-game .game-start-date').empty());
 		$('#current-game').append($('<div>').addClass('inviteList').addClass('form-group'));
 		$('#current-game').append($('<div>').addClass('form-group').append(($('<a>').addClass('bt-fs-dialog').addClass('fbbutton').text('Invite Friends'))));
 		loadPlayersWithId($('#current-game').data('id'));
 		initFriendSelector();
 		$(this).hide();
+	});
+
+	$('#current-game .game-start').click(function() {
+		var gameId = $('#current-game').data('id');
+		$.post('ajax/start_game.php', {'id' : gameId}, function(data) {
+			if (data.success) {
+				loadGameWithId(gameId);
+			}
+		});
 	});
 }
 
@@ -143,7 +145,7 @@ function loadPlayersWithId(gameId){
 	$.get('ajax/get_players.php', {'id' : gameId}, function(data){
 		if(data){
 			$.each(data, function(key, playerId){
-				getPlayerFbInfo(playerId, false);
+				getPlayerFbInfo(playerId.user, false);
 			});
 		}
 	});
@@ -237,7 +239,12 @@ function loadGameWithId(id) {
 function loadGame(data) {
 	$('#current-game .game-title').text(data.title);
 	$('#current-game .game-description').text(data.description);
-	$('#current-game .game-start-date').text(data.startDate);
+	if (data.startDate) {
+		$('#current-game .game-start-date').text(data.startDate);
+	}
+	if (data.admin) {
+		$('#current-game .admin-control').show();
+	}
 }
 
 function resetGameEdit(save, data) {
@@ -265,7 +272,6 @@ function resetGameEdit(save, data) {
 function resetForm(){
 	$('#name').text('');
 	$('#description').text('');
-	$('#startDate').value(getDateString());
 }
 
 $.editableFactory = {
