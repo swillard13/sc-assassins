@@ -209,7 +209,7 @@ function initFriendSelector(){
 
 function createGameTile(data) {
 	var game = $('<li>');
-	game.append($('<h4>').text(data.title));
+	game.append($('<div>').addClass('gameTile').append($('<h4>').text(data.title)));
 	game.attr('data-id', data.id);
 	game.data('id', data.id);
 	game.click(function() {
@@ -228,12 +228,15 @@ function viewGame(id) {
 
 function loadGames() {
 	$('#games-list').empty();
+	$('#games-list').append($('<img>').attr('src','./img/ajax-loader.gif').addClass('loading'));
 	$.get('./ajax/get_games.php', function(data) {
 		if (data) {
 			$.each(data, function(key, entry){
 				$('#games-list').append(createGameTile(entry));
 			});
 		}
+	}).done(function(){
+		$('.loading').remove();
 	});
 }
 

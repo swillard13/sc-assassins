@@ -53,6 +53,10 @@ input::-webkit-inner-spin-button {
 
 #games-list {
     display: none;
+    list-style: none;
+}
+#games-list li{
+    display:block;
 }
 
 #games-list.active {
@@ -65,4 +69,14 @@ input::-webkit-inner-spin-button {
 
 #current-game.active {
     display: block;
+}
+
+.gameTile{
+    border: 3px solid #0c3;
+    display:inline-block;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin: 10px;
+    padding: 10px;
 }
